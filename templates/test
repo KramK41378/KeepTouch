@@ -1,1 +1,111 @@
 
+<!DOCTYPE html>
+<html lang="ru" style="style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виджеты HTML</title>
+    <link rel="stylesheet" href="../styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Всевозможные виджеты HTML</h1>
+        <div class="widget">
+            <label for="text-input">Текстовое поле:</label>
+            <input type="text" id="text-input" placeholder="Введите текст">
+        </div>
+
+        <div class="widget">
+            <label for="textarea">Текстовая область:</label>
+            <textarea id="textarea" rows="4" placeholder="Введите много текста..."></textarea>
+        </div>
+        <div class="widget">
+            <label for="password">Поле для пароля:</label>
+            <input type="password" id="password" placeholder="Введите пароль">
+        </div>
+
+        <div class="widget">
+            <label for="number">Числовое поле:</label>
+            <input type="number" id="number" min="0" max="100" value="50">
+        </div>
+
+        <div class="widget">
+            <label for="date">Выбор даты:</label>
+            <input type="date" id="date">
+        </div>
+
+        <div class="widget">
+            <p>Радиокнопки:</p>
+            <div>
+                <input type="radio" id="option1" name="options" value="1">
+                <label for="option1">Вариант 1</label>
+            </div>
+            <div>
+                <input type="radio" id="option2" name="options" value="2">
+                <label for="option2">Вариант 2</label>
+            </div>
+            <div>
+                <input type="radio" id="option3" name="options" value="3">
+                <label for="option3">Вариант 3</label>
+            </div>
+        </div>
+
+        <div class="widget">
+            <p>Чекбоксы:</p>
+            <div>
+                <input type="checkbox" id="check1" value="1">
+                <label for="check1">Опция 1</label>
+            </div>
+            <div>
+                <input type="checkbox" id="check2" value="2">
+                <label for="check2">Опция 2</label>
+            </div>
+            <div>
+                <input type="checkbox" id="check3" value="3">
+                <label for="check3">Опция 3</label>
+            </div>
+        </div>
+
+        <div class="widget">
+            <label for="select">Выпадающий список:</label>
+            <select id="select">
+                <option value="1">Элемент 1</option>
+                <option value="2">Элемент 2</option>
+                <option value="3">Элемент 3</option>
+            </select>
+        </div>
+
+        <div class="widget">
+            <label for="range">Ползунок:</label>
+            <input type="range" id="range" min="0" max="100" value="50">
+            <span id="range-value">50</span>
+        </div>
+
+        <div class="widget">
+            <button type="button">Обычная кнопка</button>
+        </div>
+
+        <div class="widget">
+            <label for="file">Загрузка файла:</label>
+            <input type="file" id="file">
+        </div>
+
+        <div class="widget">
+            <label for="color">Выбор цвета:</label>
+            <input type="color" id="color" value="#ff0000">
+        </div>
+
+        <div class="widget">
+            <label for="email">Поле для e‑mail:</label>
+            <input type="email" id="email" placeholder="user@example.com">
+        </div>
+
+        <div class="widget">
+            <label for="url">Поле для URL:</label>
+            <input type="url" id="url" placeholder="https://example.com">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
