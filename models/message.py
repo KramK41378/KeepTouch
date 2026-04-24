@@ -1,3 +1,5 @@
+from typing import Any, Self
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 
@@ -9,6 +11,15 @@ class Message(BaseModel):
     sender: str
     receiver: str
     key: str
+
+    @classmethod
+    def from_custom_orm(cls, obj: 'MessageDatabase') -> "Message":
+        return cls(
+            message=obj.message,
+            sender=obj.sender,
+            receiver=obj.receiver,
+            key=obj.key,
+        )
 
 
 class MessageDatabase(SqlAlchemyBase):
@@ -27,3 +38,6 @@ class MessageDatabase(SqlAlchemyBase):
             receiver=obj.receiver,
             key=obj.key
         )
+
+    def __repr__(self) -> str:
+        return f'MessageDatabase({self.message_id=}, {self.message=}, {self.sender=}, {self.receiver=}, {self.key=})'

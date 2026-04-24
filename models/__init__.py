@@ -1,1 +1,1 @@
-from .message import Message, MessagesDatabase
+from .message import Message, MessageDatabase

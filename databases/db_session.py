@@ -24,7 +24,6 @@ def global_init(db_file):
 
 def create_session() -> Session:
     global __factory
-    print(type(__factory()))
     return __factory()
 
 if __name__ == '__main__':

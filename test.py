@@ -1,14 +1,14 @@
-class Broken:
-    def __enter__(self):
-        print(f'Запущено. Делю на 0: ')
-        return self
+import requests
 
-    def div0(self):
-        print(0 / 0)
+from models import Message
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        print(f'Черт, так же нельзя. {exc_type=}, {exc_val=}, {exc_tb=}')
-        return True
-
-with Broken() as broken:
-    broken.div0()
+server_url = 'http://localhost:8080'
+print(requests.get(url=server_url).text)
+print(requests.get(url=f'{server_url}/get_messages/test').text)
+message = Message(
+    message='hi',
+    sender='me',
+    receiver='test',
+    key='1488'
+)
+print(requests.post(url=f'{server_url}/send_message', json=message.model_dump()).text)

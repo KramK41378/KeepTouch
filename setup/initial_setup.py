@@ -13,18 +13,26 @@ class Config(BaseModel):
     name: str = None
 
 
-def get_config_file() -> TextIOWrapper:
+def get_readable_config_file() -> TextIOWrapper:
     if not Path('config.json').exists():
         with open('config.json', 'w') as f:
             json.dump({}, f)
     return open('config.json', 'r')
 
+def get_writeable_config_file() -> TextIOWrapper:
+    if not Path('config.json').exists():
+        with open('config.json', 'w') as f:
+            json.dump({}, f)
+    return open('config.json', 'w')
+
 
 def get_config() -> Config:
-    with get_config_file() as config_file:
-        config = json.load(config_file)
-    return Config(**config)
-
+    try:
+        with get_readable_config_file() as config_file:
+            config = json.load(config_file)
+        return Config(**config)
+    except json.decoder.JSONDecodeError:
+        return Config()
 
 def get_name() -> str:
     while not (name := input('Введите имя:\n').strip()): ...
@@ -32,8 +40,8 @@ def get_name() -> str:
 
 
 def save_config(config) -> None:
-    with open('config.json', 'w') as config_file:
-        json.dump(config, config_file)
+    with get_writeable_config_file() as config_file:
+        json.dump(config.model_dump(), config_file)
 
 
 def setup() -> Config:

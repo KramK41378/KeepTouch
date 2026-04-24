@@ -1,12 +1,10 @@
-from hashlib import sha384, _Hash
-from typing import List
-
-from pydantic import BaseModel
-
-from setup import setup, Config
-from flask import Flask, request
+from setup import setup
+from messenger import server
 
 
+def main():
+    setup()
+    server.run()
 
-
-
+if __name__ == '__main__':
+    main()
