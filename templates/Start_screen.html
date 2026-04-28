@@ -2,8 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
     <title>KeepTouch</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
     <style>
         html, body {
             margin: 0;
@@ -28,6 +29,7 @@
             align-items: center;
             justify-content: center;
             gap: 50px;
+            padding-bottom: 60px;
         }
         .logo-img {
             width: 100%;
@@ -54,12 +56,39 @@
         .start-btn:active {
             transform: translateY(0);
         }
+        #site-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 0;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            background-color: #000000;
+            transform-origin: center bottom;
+            will-change: transform;
+            z-index: 1000;
+        }
+        #site-footer a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 6px;
+            transition: color 0.2s;
+        }
+        #site-footer a:hover {
+            color: #5dade2;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="content">
         <img src="images/KeepTouchWord.png" alt="KeepTouch" class="logo-img">
         <button class="start-btn" onclick="alert('Добро пожаловать в KeepTouch!')">Начать работу</button>
+    </div>
+     <div id="site-footer">
+        © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
     </div>
 </body>
 </html>
