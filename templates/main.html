@@ -1,10 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
+    <title>KeepTouch — Главное окно</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .nav-button:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+        .nav-button.active {
+            background-color: rgba(52, 152, 219, 0.4);
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .content-area {
+            min-height: calc(100vh - 200px);
+            padding: 30px;
+        }
+        .profile-message {
+            text-align: center;
+            font-size: 2rem;
+            color: #3498db;
+            margin-top: 100px;
+        }
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .post-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+        .post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .post-caption {
+            padding: 20px;
+            font-size: 1rem;
+            line-height: 1.4;
+            color: #cccccc;
+        }
+        #site-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 0;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            background-color: #000000;
+            z-index: 1000;
+        }
+        #site-footer a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 6px;
+            transition: color 0.2s;
+        }
+        #site-footer a:hover {
+            color: #5dade2;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+    <div class="header">
+        <button class="nav-button active" id="profileBtn">Профиль</button>
+        <button class="nav-button" id="postsBtn">Посты</button>
+    </div>
 
+    <div class="container">
+        <div class="content-area" id="contentArea">
+            <div class="profile-message" id="profileMessage">
+                Вы находитесь в профиле
+            </div>
+        </div>
+    </div>
+
+    <div id="site-footer">
+        © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
+    </div>
+
+    <script>
+        const profileBtn = document.getElementById('profileBtn');
+        const postsBtn = document.getElementById('postsBtn');
+        const contentArea = document.getElementById('contentArea');
+
+        // Обработчики для кнопок навигации
+        profileBtn.addEventListener('click', function() {
+            profileBtn.classList.add('active');
+            postsBtn.classList.remove('active');
+
+            contentArea.innerHTML = `
+                <div class="profile-message">
+                    Вы находитесь в профиле
+                </div>
+            `;
+        });
+
+        postsBtn.addEventListener('click', function() {
+            postsBtn.classList.add('active');
+            profileBtn.classList.remove('active');
+            loadPosts();
+        });
+
+        async function loadPosts() {
+            try {
+                // Исправленный путь к CSV-файлу: ../data/inf.csv
+                // main.html находится в template/, поэтому ../ поднимается на уровень выше
+                const response = await fetch('../data/inf.csv');
+                if (!response.ok) {
+                    throw new Error(`Ошибка загрузки файла: ${response.status} ${response.statusText}`);
+                }
+
+                const csvText = await response.text();
+
+                // Показываем индикатор загрузки
+                contentArea.innerHTML = '<div style="text-align: center; margin-top: 50px;">Загрузка постов...</div>';
+
+                const posts = parseCSV(csvText);
+
+
+                if (posts.length === 0) {
+                    contentArea.innerHTML = `
+                <div style="text-align: center; color: #ff6b6b; margin-top: 50px;">
+                    <h3>Нет данных</h3>
+            <p>Файл data/inf.csv пуст или не содержит корректных данных</p>
+        </div>
+        `;
+                    return;
+                }
+
+                let postsHTML = '<div class="posts-grid">';
+                posts.forEach(post => {
+                    postsHTML += `
+                <div class="post-card">
+            <img src="${post.imagePath}" alt="${post.caption}" class="post-image"
+                 onerror="this.style.display='none'; this.parentNode.querySelector('.post-caption').style.marginTop='20px'">
+            <div class="post-caption">${post.caption}</div>
+        </div>
+        `;
+                });
+                postsHTML += '</div>';
+                contentArea.innerHTML = postsHTML;
+
+            } catch (error) {
+                console.error('Ошибка загрузки или обработки постов:', error);
+                contentArea.innerHTML = `
+            <div style="text-align: center; color: #ff6b6b; margin-top: 50px;">
+            <h3>Ошибка загрузки постов</h3>
+            <p>${error.message}</p>
+        </div>
+        `;
+            }
+        }
+
+        function parseCSV(csv) {
+            // Разбиваем текст на строки, убираем пустые строки
+            const lines = csv.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const result = [];
+
+            // Пропускаем заголовок (первую строку)
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+
+                // Обрабатываем случаи с кавычками (если в подписи есть запятые)
+                if (line.includes('"')) {
+                    const matches = line.match(/"([^"]*)"|([^,]+)/g);
+                    if (matches && matches.length >= 2) {
+                let caption = matches[0].replace(/"/g, '');
+                let imagePath = matches[1].replace(/"/g, '').trim();
+
+                // Если второй элемент — не путь, ищем путь в остальной части строки
+                if (!imagePath.includes('.') && matches.length > 2) {
+                    imagePath = matches[2].replace(/"/g, '').trim();
+                }
+
+                if (caption && imagePath) {
+                    result.push({
+                caption: caption,
+                imagePath: imagePath
+            });
+        }
+            }
+        } else {
+            // Простой случай — разделяем по первой запятой
+            const firstCommaIndex = line.indexOf(',');
+            if (firstCommaIndex > 0) {
+                const caption = line.substring(0, firstCommaIndex).trim();
+                const imagePath = line.substring(firstCommaIndex + 1).trim();
+
+
+                if (caption && imagePath) {
+                    result.push({
+                caption: caption,
+                imagePath: imagePath
+            });
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+// По умолчанию показываем профиль при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Ничего не делаем — профиль уже показан по умолчанию в HTML
+});
+    </script>
 </body>
 </html>
