@@ -80,6 +80,20 @@
             color: #5dade2;
             text-decoration: underline;
         }
+        /* Стиль для шутки */
+        .joke-container {
+            color: white;
+            font-size: 1rem;
+            max-width: 600px;
+            line-height: 1.5;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 2s forwards 1s; /* Задержка 1 с перед показом */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -90,5 +104,40 @@
     <div id="site-footer">
         © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
     </div>
+    <div class="joke-container" id="jokeContainer">
+        Загрузка шутки...
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('joke/jokes.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Ошибка сети: статус ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(jokes => {
+                if (!Array.isArray(jokes) || jokes.length === 0) {
+                    throw new Error('Файл jokes.json содержит некорректные данные');
+                }
+                const randomIndex = Math.floor(Math.random() * jokes.length);
+                const randomJoke = jokes[randomIndex];
+                if (!randomJoke.setup || !randomJoke.punchline) {
+                    throw new Error('Шутка не содержит необходимых полей (setup/punchline)');
+                }
+
+                const fullJoke = `${randomJoke.setup}\n${randomJoke.punchline}`;
+                const jokeContainer = document.getElementById('jokeContainer');
+
+                jokeContainer.innerHTML = fullJoke.replace(/\n/g, '<br>');
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки или обработки шутки:', error);
+                document.getElementById('jokeContainer').textContent = 'Шутка временно недоступна';
+            });
+    });
+</script>
+
 </body>
 </html>
