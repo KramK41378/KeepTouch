@@ -169,18 +169,19 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-            if (username && password) {
-                alert(`Добро пожаловать в KeepTouch, ${username}!`);
-                // Здесь можно добавить код для отправки данных на сервер
-            } else {
-                alert('Пожалуйста, заполните все поля.');
-            }
-        });
-    </script>
+        if (username && password) {
+            // Переходим на главную страницу
+            window.location.href = 'main.html';
+        } else {
+            alert('Пожалуйста, заполните все поля.');
+        }
+    });
+</script>
+
 </body>
 </html>

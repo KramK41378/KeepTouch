@@ -216,7 +216,7 @@
             }
 
             // Если все проверки пройдены, имитируем отправку данных
-            alert(`Регистрация успешна! Добро пожаловать, ${fullname}!`);
+            window.location.href = 'main.html';
 
             // Здесь можно добавить код для отправки данных на сервер
             /*
@@ -235,7 +235,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(`Регистрация успешна! Добро пожаловать, ${fullname}!`);
+                    window.location.href = 'main.html';
                 } else {
                     alert('Ошибка регистрации: ' + data.message);
                 }
