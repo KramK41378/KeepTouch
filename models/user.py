@@ -1,5 +1,3 @@
-from typing import Self
-
 from pydantic import BaseModel
 from sqlalchemy import String, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -14,6 +12,7 @@ class User(BaseModel):
     username: str
     profile_image_path: str
     description: str
+    hashed_password: str
 
     posts: list[Post] | None = None
 
@@ -24,6 +23,7 @@ class User(BaseModel):
             username=user_orm.username,
             profile_image_path=user_orm.profile_image_path,
             description=user_orm.description,
+            hashed_password=user_orm.hashed_password,
         )
         user.posts = [Post.from_custom_orm(post, user) for post in user_orm.posts]
         return user
@@ -35,6 +35,7 @@ class UserORM(SqlAlchemyBase):
     username: Mapped[str] = mapped_column(String, unique=True)
     profile_image_path: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
+    hashed_password: Mapped[str] = mapped_column(String)
 
     posts: Mapped[list[PostORM]] = relationship(back_populates='users')
 
@@ -45,4 +46,5 @@ class UserORM(SqlAlchemyBase):
             username=model.username,
             profile_image_path=model.profile_image_path,
             description=model.description,
+            hashed_password=model.hashed_password,
         )

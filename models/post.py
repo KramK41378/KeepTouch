@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Self
 
 from pydantic import BaseModel
 from sqlalchemy import String, JSON, DateTime
@@ -11,7 +10,7 @@ from .user import User, UserORM
 
 class Post(BaseModel):
     text: str
-    images: dict[str, str]  # {имя: путь}
+    images: list[str]
     author: User
     timestamp: datetime
 
@@ -23,6 +22,12 @@ class Post(BaseModel):
             timestamp=post_orm.timestamp,
             author=author or User.from_custom_orm(post_orm.author),
         )
+
+    def get_html(self) -> str:
+        html_test = f'''<pre>{self.text}</pre>'''
+        for image in self.images:
+            html_test += f'''<img src="{image}" alt="KeepTouch™">'''
+        return html_test
 
 
 class PostORM(SqlAlchemyBase):
