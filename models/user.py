@@ -1,3 +1,5 @@
+from typing import Self
+
 from pydantic import BaseModel
 from sqlalchemy import String, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -13,17 +15,18 @@ class User(BaseModel):
     profile_image_path: str
     description: str
 
-    posts: list[PostORM]
+    posts: list[Post] | None = None
 
     @classmethod
     def from_custom_orm(cls, user_orm: 'UserORM') -> 'User':
-        return cls(
+        user = cls(
             name=user_orm.name,
             username=user_orm.username,
             profile_image_path=user_orm.profile_image_path,
             description=user_orm.description,
-            posts=user_orm.posts,
         )
+        user.posts = [Post.from_custom_orm(post, user) for post in user_orm.posts]
+        return user
 
 class UserORM(SqlAlchemyBase):
     __tablename__ = 'users'

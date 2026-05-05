@@ -1,5 +1,8 @@
+from datetime import datetime
+from typing import Self
+
 from pydantic import BaseModel
-from sqlalchemy import String, JSON
+from sqlalchemy import String, JSON, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from databases import SqlAlchemyBase
@@ -8,16 +11,19 @@ from .user import User, UserORM
 
 class Post(BaseModel):
     text: str
-    images: dict[str, str] # {имя: путь}
+    images: dict[str, str]  # {имя: путь}
     author: User
+    timestamp: datetime
 
     @classmethod
-    def from_custom_orm(cls, post_orm: 'PostORM') -> 'Post':
+    def from_custom_orm(cls, post_orm: 'PostORM', author: User = None) -> 'Post':
         return Post(
             text=post_orm.text,
             images=post_orm.images,
-            author=post_orm.author,
+            timestamp=post_orm.timestamp,
+            author=author or User.from_custom_orm(post_orm.author),
         )
+
 
 class PostORM(SqlAlchemyBase):
     __tablename__ = 'posts'
@@ -25,6 +31,7 @@ class PostORM(SqlAlchemyBase):
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str] = mapped_column(String)
     images: Mapped[dict] = mapped_column(JSON)
+    timestamp: Mapped[datetime] = mapped_column(DateTime)
 
     author: Mapped[UserORM] = relationship(back_populates='posts')
 
