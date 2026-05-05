@@ -2,8 +2,8 @@ import logging
 from typing import List, Sequence
 
 from databases import global_init, create_session
-from models import Message
-from models.message import MessageDatabase
+from deprecated.models import Message
+from deprecated.models.message import MessageDatabase
 from sqlalchemy import select, Select
 
 

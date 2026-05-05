@@ -1,1 +1,1 @@
-from .message import Message, MessageDatabase
+from .post import Post, PostORM

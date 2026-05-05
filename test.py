@@ -1,6 +1,6 @@
 import requests
 
-from models import Message
+from deprecated.models import Message
 
 server_url = 'http://localhost:8080'
 print(requests.get(url=server_url).text)
