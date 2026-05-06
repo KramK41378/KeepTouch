@@ -1,7 +1,9 @@
 from hashlib import sha512
 
-from flask import jsonify, request
+from flask import jsonify, request, make_response
+from pydantic import ValidationError
 from sqlalchemy import select, Select
+from sqlalchemy.exc import IntegrityError
 
 from databases import create_session
 from models import UserORM, User
@@ -42,17 +44,36 @@ def check_user_password():
     return hashed_password == user.hashed_password
 
 
-@app.route('/add/user', methods=['POST'])
+@app.route('/users/add', methods=['POST'])
 def add_user():
-    with create_session() as session:
-        try:
-            user_model = User.model_validate(request.json)
+    raw_user_model = request.get_json()
 
-            user_orm = UserORM.from_pydantic_model(user_model)
+    try:
+        user_model = User.model_validate(raw_user_model)
+    except ValidationError as e:
+        return jsonify({'error': 'validation', 'message': e.fields}), 400
 
-            session.add(user_orm)
-            session.commit()
-        except:
-            session.rollback()
-            return False
-        return True
+    session = create_session()
+
+    try:
+        user_orm = UserORM.from_pydantic_model(user_model)
+
+        session.add(user_orm)
+        session.commit()
+        session.refresh(user_orm)
+
+        resp = jsonify(User.from_custom_orm(user_orm).model_dump())
+        resp.status = 201
+        resp.headers['Location'] = f'/user/{user_orm.username}'
+        return resp
+
+    except IntegrityError:
+        session.rollback()
+        return jsonify({'error': 'duplicate', 'message': 'User with this identifier already exists'}), 409
+
+    except Exception:
+        session.rollback()
+        return jsonify({'error': 'INTERNAL', 'detail': 'Server processing error'}), 500
+
+    finally:
+        session.close()
