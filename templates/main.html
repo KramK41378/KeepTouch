@@ -57,7 +57,7 @@
             text-align: center;
             font-size: 2rem;
             color: #3498db;
-            margin-top: 100px;
+            margin-top: 50px;
         }
         .posts-grid {
             display: grid;
@@ -109,6 +109,122 @@
             color: #5dade2;
             text-decoration: underline;
         }
+        .add-post-btn {
+            display: block;
+            margin: 20px auto 30px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        .add-post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            position: relative;
+            color: #ffffff;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #cccccc;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #ff6b6b;
+        }
+        .modal-content h3 {
+            margin: 0 0 25px 0;
+            color: #3498db;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+            font-size: 0.95rem;
+        }
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .image-preview {
+            margin-top: 12px;
+            text-align: center;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 10px;
+            object-fit: contain;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        .post-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        .post-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .post-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -129,21 +245,45 @@
         © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
     </div>
 
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <h3>✨ Новый пост</h3>
+
+            <div class="form-group">
+                <label for="postImageInput">📷 Выберите фото (JPG):</label>
+                <input type="file" id="postImageInput" accept="image/jpeg, image/jpg">
+                <div id="imagePreview" class="image-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="postCaption">✍️ Подпись:</label>
+                <textarea id="postCaption" rows="3" placeholder="Напишите что-нибудь..."></textarea>
+            </div>
+
+            <button id="postSubmitBtn" class="post-btn" disabled>🚀 Запостить</button>
+        </div>
+    </div>
+
     <script>
         const profileBtn = document.getElementById('profileBtn');
         const postsBtn = document.getElementById('postsBtn');
         const contentArea = document.getElementById('contentArea');
 
-        // Обработчики для кнопок навигации
+        const modal = document.getElementById('createPostModal');
+        const modalClose = document.getElementById('modalClose');
+        const postImageInput = document.getElementById('postImageInput');
+        const postCaption = document.getElementById('postCaption');
+        const postSubmitBtn = document.getElementById('postSubmitBtn');
+        const imagePreview = document.getElementById('imagePreview');
+
+        let selectedImageFile = null;
+        let selectedImagePreview = null;
+
         profileBtn.addEventListener('click', function() {
             profileBtn.classList.add('active');
             postsBtn.classList.remove('active');
-
-            contentArea.innerHTML = `
-                <div class="profile-message">
-                    Вы находитесь в профиле
-                </div>
-            `;
+            loadProfile();
         });
 
         postsBtn.addEventListener('click', function() {
@@ -152,110 +292,194 @@
             loadPosts();
         });
 
-        async function loadPosts() {
+        async function loadProfile() {
             try {
-                // Исправленный путь к CSV-файлу: ../data/inf.csv
-                // main.html находится в template/, поэтому ../ поднимается на уровень выше
                 const response = await fetch('../data/inf.csv');
                 if (!response.ok) {
-                    throw new Error(`Ошибка загрузки файла: ${response.status} ${response.statusText}`);
+                    throw new Error(`Ошибка: ${response.status}`);
                 }
-
                 const csvText = await response.text();
-
-                // Показываем индикатор загрузки
-                contentArea.innerHTML = '<div style="text-align: center; margin-top: 50px;">Загрузка постов...</div>';
-
                 const posts = parseCSV(csvText);
 
+                let html = `
+                    <div class="profile-message">👤 Ваш профиль</div>
+                    <button class="add-post-btn" id="addPostBtn">➕ Добавить пост</button>
+                `;
+
+                if (posts.length > 0) {
+                    html += '<div class="posts-grid">';
+                    posts.forEach(post => {
+                        html += `
+                            <div class="post-card">
+                                <img src="${post.imagePath}" alt="${escapeHtml(post.caption)}" class="post-image"
+                                     onerror="this.style.display='none'; this.parentNode.querySelector('.post-caption').style.marginTop='20px'">
+                                <div class="post-caption">${escapeHtml(post.caption)}</div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                }
+
+                contentArea.innerHTML = html;
+
+                document.getElementById('addPostBtn')?.addEventListener('click', openModal);
+
+            } catch (error) {
+                console.error('Ошибка загрузки профиля:', error);
+                contentArea.innerHTML = `
+                    <div style="text-align:center;color:#ff6b6b;margin-top:50px;">
+                        <h3>⚠️ Ошибка</h3><p>${escapeHtml(error.message)}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadPosts() {
+            try {
+                const response = await fetch('../data/inf.csv');
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.status}`);
+                }
+                const csvText = await response.text();
+                contentArea.innerHTML = '<div style="text-align:center;margin-top:50px;">🔄 Загрузка...</div>';
+                const posts = parseCSV(csvText);
 
                 if (posts.length === 0) {
                     contentArea.innerHTML = `
-                <div style="text-align: center; color: #ff6b6b; margin-top: 50px;">
-                    <h3>Нет данных</h3>
-            <p>Файл data/inf.csv пуст или не содержит корректных данных</p>
-        </div>
-        `;
+                        <div style="text-align:center;color:#ff6b6b;margin-top:50px;">
+                            <h3>Нет данных</h3>
+                            <p>Файл пуст или содержит ошибки</p>
+                        </div>
+                    `;
                     return;
                 }
 
                 let postsHTML = '<div class="posts-grid">';
                 posts.forEach(post => {
                     postsHTML += `
-                <div class="post-card">
-            <img src="${post.imagePath}" alt="${post.caption}" class="post-image"
-                 onerror="this.style.display='none'; this.parentNode.querySelector('.post-caption').style.marginTop='20px'">
-            <div class="post-caption">${post.caption}</div>
-        </div>
-        `;
+                        <div class="post-card">
+                            <img src="${post.imagePath}" alt="${escapeHtml(post.caption)}" class="post-image"
+                                 onerror="this.style.display='none'; this.parentNode.querySelector('.post-caption').style.marginTop='20px'">
+                            <div class="post-caption">${escapeHtml(post.caption)}</div>
+                        </div>
+                    `;
                 });
                 postsHTML += '</div>';
                 contentArea.innerHTML = postsHTML;
 
             } catch (error) {
-                console.error('Ошибка загрузки или обработки постов:', error);
+                console.error('Ошибка загрузки постов:', error);
                 contentArea.innerHTML = `
-            <div style="text-align: center; color: #ff6b6b; margin-top: 50px;">
-            <h3>Ошибка загрузки постов</h3>
-            <p>${error.message}</p>
-        </div>
-        `;
+                    <div style="text-align:center;color:#ff6b6b;margin-top:50px;">
+                        <h3>Ошибка загрузки</h3>
+                        <p>${escapeHtml(error.message)}</p>
+                    </div>
+                `;
             }
         }
 
         function parseCSV(csv) {
-            // Разбиваем текст на строки, убираем пустые строки
             const lines = csv.split('\n').map(line => line.trim()).filter(line => line.length > 0);
             const result = [];
-
-            // Пропускаем заголовок (первую строку)
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i];
-
-                // Обрабатываем случаи с кавычками (если в подписи есть запятые)
                 if (line.includes('"')) {
                     const matches = line.match(/"([^"]*)"|([^,]+)/g);
                     if (matches && matches.length >= 2) {
-                let caption = matches[0].replace(/"/g, '');
-                let imagePath = matches[1].replace(/"/g, '').trim();
-
-                // Если второй элемент — не путь, ищем путь в остальной части строки
-                if (!imagePath.includes('.') && matches.length > 2) {
-                    imagePath = matches[2].replace(/"/g, '').trim();
-                }
-
-                if (caption && imagePath) {
-                    result.push({
-                caption: caption,
-                imagePath: imagePath
-            });
-        }
-            }
-        } else {
-            // Простой случай — разделяем по первой запятой
-            const firstCommaIndex = line.indexOf(',');
-            if (firstCommaIndex > 0) {
-                const caption = line.substring(0, firstCommaIndex).trim();
-                const imagePath = line.substring(firstCommaIndex + 1).trim();
-
-
-                if (caption && imagePath) {
-                    result.push({
-                caption: caption,
-                imagePath: imagePath
-            });
+                        let caption = matches[0].replace(/"/g, '');
+                        let imagePath = matches[1].replace(/"/g, '').trim();
+                        if (!imagePath.includes('.') && matches.length > 2) {
+                            imagePath = matches[2].replace(/"/g, '').trim();
+                        }
+                        if (caption && imagePath) {
+                            result.push({ caption, imagePath });
+                        }
+                    }
+                } else {
+                    const idx = line.indexOf(',');
+                    if (idx > 0) {
+                        const caption = line.substring(0, idx).trim();
+                        const imagePath = line.substring(idx + 1).trim();
+                        if (caption && imagePath) {
+                            result.push({ caption, imagePath });
+                        }
+                    }
                 }
             }
+            return result;
         }
-    }
 
-    return result;
-}
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-// По умолчанию показываем профиль при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    // Ничего не делаем — профиль уже показан по умолчанию в HTML
-});
+        function openModal() {
+            modal.style.display = 'flex';
+            resetForm();
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            resetForm();
+        }
+
+        function resetForm() {
+            selectedImageFile = null;
+            selectedImagePreview = null;
+            postImageInput.value = '';
+            postCaption.value = '';
+            imagePreview.innerHTML = '';
+            postSubmitBtn.disabled = true;
+        }
+
+        function checkForm() {
+            postSubmitBtn.disabled = !(selectedImagePreview && postCaption.value.trim());
+        }
+
+        modalClose?.addEventListener('click', closeModal);
+        modal?.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+        });
+
+        postImageInput?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!['image/jpeg', 'image/jpg'].includes(file.type)) {
+                alert('⚠️ Пожалуйста, выберите файл в формате JPG');
+                this.value = '';
+                return;
+            }
+
+            selectedImageFile = file;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                selectedImagePreview = event.target.result;
+                imagePreview.innerHTML = `<img src="${selectedImagePreview}" alt="Предпросмотр">`;
+                checkForm();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        postCaption?.addEventListener('input', checkForm);
+
+        postSubmitBtn?.addEventListener('click', function() {
+            if (!selectedImagePreview || !postCaption.value.trim()) return;
+            alert('✅ Пост сделан!');
+            closeModal();
+            if (profileBtn.classList.contains('active')) {
+                loadProfile();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+        });
     </script>
 </body>
 </html>
