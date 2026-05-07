@@ -1,9 +1,9 @@
 from threading import Thread
 from pydantic import ValidationError
 
-from messenger.message_handler import MessageHandler
-from models import Message
-from setup import setup, Config
+from deprecated.messenger.message_handler import MessageHandler
+from deprecated.models import Message
+from deprecated.setup import setup, Config
 from flask import Flask, request
 
 

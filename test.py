@@ -1,14 +1,15 @@
-import requests
+from itertools import product
+import multiprocessing
 
-from models import Message
+def process(i):
+    if max(map(i.count, i)) > 3:
+        return 0
+    for j0, j1 in zip(i, i[1:]):
+        if (j0 % 2) == (j1 % 2):
+            return 0
+    return 1
 
-server_url = 'http://localhost:8080'
-print(requests.get(url=server_url).text)
-print(requests.get(url=f'{server_url}/get_messages/test').text)
-message = Message(
-    message='hi',
-    sender='me',
-    receiver='test',
-    key='1488'
-)
-print(requests.post(url=f'{server_url}/send_message', json=message.model_dump()).text)
+pool = multiprocessing.Pool(multiprocessing.cpu_count() - 1)
+
+ans = sum(pool.map(process, product(range(1, 9), repeat=9)))
+print(ans)
