@@ -42,3 +42,7 @@ def policy():
 @app.route('/posts')
 def posts():
     return render_template('main_posts.html')
+
+@app.route('/main')
+def main_():
+    return render_template('main.html')
