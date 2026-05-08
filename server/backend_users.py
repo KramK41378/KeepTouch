@@ -1,6 +1,6 @@
 from hashlib import sha512
 
-from flask import jsonify, request, make_response
+from flask import jsonify, request
 from pydantic import ValidationError
 from sqlalchemy import select, Select
 from sqlalchemy.exc import IntegrityError
@@ -54,18 +54,12 @@ def add_user():
         return jsonify({'error': 'validation', 'message': e.errors()}), 400
 
     session = create_session()
-    commited: bool = False
-    username = user_model.username
 
     try:
         user_orm: UserORM = UserORM.from_pydantic_model(user_model)
 
         session.add(user_orm)
         session.commit()
-
-        commited = True
-
-        session.refresh(user_orm)
 
         resp = jsonify(User.from_custom_orm(user_orm).model_dump())
         resp.status_code = 201
@@ -77,12 +71,6 @@ def add_user():
         return jsonify({'error': 'duplicate', 'message': 'User with this identifier already exists'}), 409
 
     except Exception:
-        if commited:
-            resp = jsonify({'error': "can't return updated values", "message": "successfully added user"})
-            resp.status_code = 201
-            resp.headers['Location'] = f'/user/{username}'
-            return resp
-
         session.rollback()
         return jsonify({'error': 'INTERNAL', 'detail': 'Server processing error'}), 500
 
