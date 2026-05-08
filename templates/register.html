@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
     <title>KeepTouch — Регистрация</title>
-    <link rel="icon" href="{{ url_for('static', 'images/icon.png') }}" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/png">
     <style>
         html, body {
             margin: 0;
@@ -147,7 +147,7 @@
 </head>
 <body>
     <div class="content">
-        <img src="{{ url_for('static', 'images/KeepTouchWord.png') }}" alt="KeepTouch" class="logo-img">
+        <img src="{{ url_for('static', filename='images/KeepTouchWord.png') }}" alt="KeepTouch" class="logo-img">
         <h1>Регистрация в KeepTouch</h1>
         <form id="registerForm">
             <div class="form-group">
@@ -172,11 +172,11 @@
                 <input type="password" id="confirm-password" name="confirm-password" placeholder="Повторите пароль" required>
             </div>
             <button type="submit" class="register-btn">Зарегистрироваться</button>
-            <a href="login.html" class="login-link">Уже есть аккаунт? Войти</a>
+            <a href="login" class="login-link">Уже есть аккаунт? Войти</a>
         </form>
     </div>
     <div id="site-footer">
-        © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
+        © 2026 KeepTouch. Все права защищены. | <a href="policy">Политика конфиденциальности</a>
     </div>
 
     <script>
@@ -235,7 +235,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = 'main.html';
+                    window.location.href = 'main';
                 } else {
                     alert('Ошибка регистрации: ' + data.message);
                 }
