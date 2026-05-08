@@ -1,183 +1,219 @@
-/* Сброс базовых стилей */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-/* Базовые стили страницы */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
-    line-height: 1.6;
-    padding: 20px;
-}
-
-/* Контейнер для формы */
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    background: #1e1e1e;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-/* Заголовок */
-h1 {
-    text-align: center;
-    margin-bottom: 40px;
-    color: #bb86fc;
-    font-size: 2rem;
-    font-weight: 600;
-}
-
-/* Виджеты — блоки с элементами формы */
-.widget {
-    margin-bottom: 25px;
-}
-
-/* Стили меток */
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #90caf9;
-    font-size: 0.9rem;
-}
-
-/* Общие стили для полей ввода */
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 12px 16px;
-    background-color: #2d2d2d;
-    color: #ffffff;
-    border: 2px solid #444;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-/* Подсветка при наведении на поля ввода */
-input:hover,
-textarea:hover,
-select:hover {
-    border-color: #03a9f4;
-    box-shadow: 0 0 8px rgba(3, 169, 244, 0.25);
-}
-
-/* Эффект при фокусе (клик на поле) */
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #40c4ff;
-    box-shadow: 0 0 12px rgba(64, 196, 255, 0.4);
-}
-
-/* Текстовая область */
-textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-/* Кнопка */
-button {
-    padding: 14px 28px;
-    background-color: #03a9f4;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-button:hover {
-    background-color: #0288d1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(2, 136, 209, 0.4);
-}
-
-button:active {
-    transform: translateY(0);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Чекбоксы и радиокнопки */
-input[type="checkbox"],
-input[type="radio"] {
-    accent-color: #03a9f4;
-    margin-right: 10px;
-    transform: scale(1.2);
-}
-
-/* Ползунок */
-input[type="range"] {
-    width: 100%;
-}
-
-#range-value {
-    display: inline-block;
-    margin-top: 10px;
-    font-weight: bold;
-    color: #4fc3f7;
-}
-
-/* Группы радиокнопок и чекбоксов */
-.radio-group,
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.radio-group label,
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-/* Стили для поля выбора цвета */
-input[type="color"] {
-    width: 60px;
-    height: 40px;
-    padding: 4px;
-    border: 2px solid #444;
-    border-radius: 6px;
-    background-color: #2d2d2d;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    -webkit-appearance: none; /* Убираем стили браузера по умолчанию */
-    appearance: none;
-}
-
-/* Стилизируем сам элемент выбора цвета */
-input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: 4px;
-}
-
-input[type="color"]::-moz-color-swatch {
-    border: none;
-    border-radius: 4px;
-}
-
-/* Подсветка при наведении */
-input[type="color"]:hover {
-    border-color: #03a9f4; /* Голубой цвет границы при наведении */
-    box-shadow: 0 0 8px rgba(3, 169, 244, 0.25); /* Голубая подсветка */
-    transform: translateY(-1px);
-}
-
-/* Эффект при фокусе */
-input[type="color"]:focus {
-    outline: none;
-    border-color: #40c4ff; /* Более яркий голубой при фокусе */
-    box-shadow: 0 0 12px rgba(64, 196, 255, 0.4); /* Более интенсивная подсветка */
-}
-
+html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .nav-button:hover {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+        }
+        .nav-button.active {
+            background-color: rgba(52, 152, 219, 0.4);
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .content-area {
+            min-height: calc(100vh - 200px);
+            padding: 30px;
+        }
+        .profile-message {
+            text-align: center;
+            font-size: 2rem;
+            color: #3498db;
+            margin-top: 50px;
+        }
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .post-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+        .post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .post-caption {
+            padding: 20px;
+            font-size: 1rem;
+            line-height: 1.4;
+            color: #cccccc;
+        }
+        #site-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 0;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            background-color: #000000;
+            z-index: 1000;
+        }
+        #site-footer a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 6px;
+            transition: color 0.2s;
+        }
+        #site-footer a:hover {
+            color: #5dade2;
+            text-decoration: underline;
+        }
+        .add-post-btn {
+            display: block;
+            margin: 20px auto 30px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+        .add-post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            position: relative;
+            color: #ffffff;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #cccccc;
+            transition: color 0.3s;
+        }
+        .modal-close:hover {
+            color: #ff6b6b;
+        }
+        .modal-content h3 {
+            margin: 0 0 25px 0;
+            color: #3498db;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+            font-size: 0.95rem;
+        }
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+        .image-preview {
+            margin-top: 12px;
+            text-align: center;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 10px;
+            object-fit: contain;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        .post-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+        .post-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .post-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
