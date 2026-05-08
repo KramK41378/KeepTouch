@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
     <title>KeepTouch — Главное окно</title>
-    <link rel="icon" href="images/icon.png" type="image/png">
+    <link rel="icon" href="{{ url_for('static', 'images/icon.png') }}" type="static/image/png">
     <style>
         html, body {
             margin: 0;
@@ -248,16 +248,16 @@
     <div id="createPostModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" id="modalClose">&times;</span>
-            <h3>✨ Новый пост</h3>
+            <h3>Новый пост</h3>
 
             <div class="form-group">
-                <label for="postImageInput">📷 Выберите фото (JPG):</label>
+                <label for="postImageInput">Выберите фото (JPG):</label>
                 <input type="file" id="postImageInput" accept="image/jpeg, image/jpg">
                 <div id="imagePreview" class="image-preview"></div>
             </div>
 
             <div class="form-group">
-                <label for="postCaption">✍️ Подпись:</label>
+                <label for="postCaption">✍Подпись:</label>
                 <textarea id="postCaption" rows="3" placeholder="Напишите что-нибудь..."></textarea>
             </div>
 
