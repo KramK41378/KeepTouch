@@ -17,7 +17,7 @@ def get_users_by_query(query: Select) -> list[User]:
     return users
 
 
-@app.route('/users', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def get_users():  # -> list[User]
     query = select(UserORM).order_by(UserORM.username)
 
@@ -26,7 +26,7 @@ def get_users():  # -> list[User]
     return jsonify(users)
 
 
-@app.route('/users/<string:username>', methods=['GET'])
+@app.route('/user/<string:username>', methods=['GET'])
 def get_user(username: str):  # -> User
     query = select(UserORM).where(UserORM.username == username)
 
@@ -44,26 +44,31 @@ def check_user_password():
     return hashed_password == user.hashed_password
 
 
-@app.route('/users/add', methods=['POST'])
+@app.route('/user/add', methods=['POST'])
 def add_user():
     raw_user_model = request.get_json()
 
     try:
         user_model = User.model_validate(raw_user_model)
     except ValidationError as e:
-        return jsonify({'error': 'validation', 'message': e.fields}), 400
+        return jsonify({'error': 'validation', 'message': e.errors()}), 400
 
     session = create_session()
+    commited: bool = False
+    username = user_model.username
 
     try:
-        user_orm = UserORM.from_pydantic_model(user_model)
+        user_orm: UserORM = UserORM.from_pydantic_model(user_model)
 
         session.add(user_orm)
         session.commit()
+
+        commited = True
+
         session.refresh(user_orm)
 
         resp = jsonify(User.from_custom_orm(user_orm).model_dump())
-        resp.status = 201
+        resp.status_code = 201
         resp.headers['Location'] = f'/user/{user_orm.username}'
         return resp
 
@@ -72,6 +77,12 @@ def add_user():
         return jsonify({'error': 'duplicate', 'message': 'User with this identifier already exists'}), 409
 
     except Exception:
+        if commited:
+            resp = jsonify({'error': "can't return updated values", "message": "successfully added user"})
+            resp.status_code = 201
+            resp.headers['Location'] = f'/user/{username}'
+            return resp
+
         session.rollback()
         return jsonify({'error': 'INTERNAL', 'detail': 'Server processing error'}), 500
 

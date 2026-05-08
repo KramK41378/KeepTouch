@@ -1,6 +1,7 @@
 from threading import Thread
 
 from flask import Flask, jsonify
+from werkzeug.exceptions import BadRequest
 
 app = Flask(__name__)
 
@@ -8,9 +9,6 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return 'backend-server is running'
-
-
-from werkzeug.exceptions import BadRequest
 
 
 @app.errorhandler(BadRequest)
