@@ -5,96 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
     <title>KeepTouch</title>
     <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            overflow-x: hidden;
-        }
-        .content {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 50px;
-            padding-bottom: 60px;
-        }
-        .logo-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        .start-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 1.8rem 3.5rem;
-            font-size: 2.2rem;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.4);
-            min-width: 22rem;
-        }
-        .start-btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 20px rgba(52, 152, 219, 0.6);
-        }
-        .start-btn:active {
-            transform: translateY(0);
-        }
-        #site-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 12px 0;
-            color: #999;
-            font-size: 13px;
-            text-align: center;
-            background-color: #000000;
-            transform-origin: center bottom;
-            will-change: transform;
-            z-index: 1000;
-        }
-        #site-footer a {
-            color: #3498db;
-            text-decoration: none;
-            margin-left: 6px;
-            transition: color 0.2s;
-        }
-        #site-footer a:hover {
-            color: #5dade2;
-            text-decoration: underline;
-        }
-        /* Стиль для шутки */
-        .joke-container {
-            color: white;
-            font-size: 1rem;
-            max-width: 600px;
-            line-height: 1.5;
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 2s forwards 1s; /* Задержка 1 с перед показом */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_start_screen.css') }}">
 </head>
 <body>
     <div class="content">
@@ -107,37 +18,5 @@
     <div class="joke-container" id="jokeContainer">
         Загрузка шутки...
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('joke/jokes.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Ошибка сети: статус ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(jokes => {
-                if (!Array.isArray(jokes) || jokes.length === 0) {
-                    throw new Error('Файл jokes.json содержит некорректные данные');
-                }
-                const randomIndex = Math.floor(Math.random() * jokes.length);
-                const randomJoke = jokes[randomIndex];
-                if (!randomJoke.setup || !randomJoke.punchline) {
-                    throw new Error('Шутка не содержит необходимых полей (setup/punchline)');
-                }
-
-                const fullJoke = `${randomJoke.setup}\n${randomJoke.punchline}`;
-                const jokeContainer = document.getElementById('jokeContainer');
-
-                jokeContainer.innerHTML = fullJoke.replace(/\n/g, '<br>');
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки или обработки шутки:', error);
-                document.getElementById('jokeContainer').textContent = 'Шутка временно недоступна';
-            });
-    });
-</script>
-
 </body>
 </html>
