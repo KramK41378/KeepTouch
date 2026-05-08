@@ -38,3 +38,7 @@ def register():
 @app.route('/policy')
 def policy():
     return render_template('policy.html')
+
+@app.route('/posts')
+def posts():
+    return render_template('main_posts.html')
