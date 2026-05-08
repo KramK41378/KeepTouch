@@ -1,16 +1,8 @@
-import datetime
+from server import frontend_server, backend_server, start_backend_server, start_frontend_server
 
-from flask import Flask, jsonify
-from pydantic import BaseModel
-
-app = Flask(__name__)
-
-class Md(BaseModel):
-    time: datetime.datetime
-
-@app.route('/')
-def index():
-    return (Md(time=datetime.datetime.now()).model_dump_json())
+def main():
+    start_frontend_server()
+    start_backend_server()
 
 if __name__ == '__main__':
-    app.run()
+    main()
