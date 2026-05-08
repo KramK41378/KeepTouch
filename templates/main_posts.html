@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
+    <title>KeepTouch — Главное окно</title>
+    <link rel="icon" href="{{ url_for('static', 'images/icon.png') }}" type="static/image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+    <div class="header">
+        <button class="nav-button" id="profileBtn">Профиль</button>
+        <button class="nav-button active" id="postsBtn">Посты</button>
+    </div>
+
+    <div class="container">
+        <div class="content-area" id="contentArea">
+            <div class="profile-message" id="profileMessage">
+                Тут посты
+            </div>
+        </div>
+    </div>
+
+    <div id="site-footer">
+        © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
+    </div>
+
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <h3>Новый пост</h3>
+
+            <div class="form-group">
+                <label for="postImageInput">Выберите фото (JPG):</label>
+                <input type="file" id="postImageInput" accept="image/jpeg, image/jpg">
+                <div id="imagePreview" class="image-preview"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="postCaption">✍Подпись:</label>
+                <textarea id="postCaption" rows="3" placeholder="Напишите что-нибудь..."></textarea>
+            </div>
+
+            <button id="postSubmitBtn" class="post-btn" disabled>Запостить</button>
+        </div>
+    </div>
+</body>
+</html>
