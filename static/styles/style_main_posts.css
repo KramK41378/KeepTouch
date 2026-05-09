@@ -27,6 +27,7 @@ body {
     padding: 10px 20px;
     transition: all 0.3s ease;
     border-radius: 10px;
+    text-decoration: none;
 }
 .nav-button:hover {
     background-color: rgba(52, 152, 219, 0.2);
@@ -35,6 +36,7 @@ body {
 .nav-button.active {
     background-color: rgba(52, 152, 219, 0.4);
     color: #ffffff;
+    pointer-events: none;
 }
 .container {
     max-width: 1200px;

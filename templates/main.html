@@ -2,47 +2,56 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
-    <title>KeepTouch — Главное окно</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepTouch — Профиль</title>
     <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_main.css') }}">
 </head>
 <body>
     <div class="header">
-        <button class="nav-button active" id="profileBtn">Профиль</button>
-        <button class="nav-button" id="postsBtn">Посты</button>
+        <button class="nav-button active">Профиль</button>
+        <a href="{{ url_for('posts') }}" class="nav-button">Посты</a>
     </div>
 
     <div class="container">
-        <div class="content-area" id="contentArea">
-            <div class="profile-message" id="profileMessage">
-                Вы находитесь в профиле
+        <div class="profile-header">
+            <div class="avatar">👤</div>
+            <h1 class="username">{{ username|default('Пользователь') }}</h1>
+            <p class="bio">{{ bio|default('Здесь пока нет описания...') }}</p>
+
+            <div class="stats">
+                <div class="stat"><span class="stat-num">{{ posts_count|default(0) }}</span><span class="stat-label">Постов</span></div>
+                <div class="stat"><span class="stat-num">0</span><span class="stat-label">Подписчиков</span></div>
+                <div class="stat"><span class="stat-num">0</span><span class="stat-label">Подписок</span></div>
             </div>
+
+            <button class="edit-profile-btn">Редактировать профиль</button>
         </div>
+
+        <h2 class="section-title">Мои публикации</h2>
+        {% if user_posts %}
+        <div class="posts-grid">
+            {% for post in user_posts %}
+            <article class="post-card">
+                {% if post.image_url %}
+                    <img src="{{ post.image_url }}" alt="Фото" class="post-image" loading="lazy">
+                {% else %}
+                    <div class="post-image-placeholder">📷</div>
+                {% endif %}
+                <div class="post-caption">
+                    <p class="post-text">{{ post.caption }}</p>
+                    <span class="post-time">{{ post.date|default('') }}</span>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-posts">У вас пока нет публикаций.</div>
+        {% endif %}
     </div>
 
     <div id="site-footer">
-        © 2026 KeepTouch. Все права защищены. | <a href="policy.html">Политика конфиденциальности</a>
-    </div>
-
-    <div id="createPostModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" id="modalClose">&times;</span>
-            <h3>Новый пост</h3>
-
-            <div class="form-group">
-                <label for="postImageInput">Выберите фото (JPG):</label>
-                <input type="file" id="postImageInput" accept="image/jpeg, image/jpg">
-                <div id="imagePreview" class="image-preview"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="postCaption">✍Подпись:</label>
-                <textarea id="postCaption" rows="3" placeholder="Напишите что-нибудь..."></textarea>
-            </div>
-
-            <button id="postSubmitBtn" class="post-btn" disabled>Запостить</button>
-        </div>
+        © 2026 KeepTouch. Все права защищены. | <a href="{{ url_for('policy') }}">Политика конфиденциальности</a>
     </div>
 </body>
 </html>
