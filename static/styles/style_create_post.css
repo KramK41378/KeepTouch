@@ -1,0 +1,174 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+*, *:before, *:after { box-sizing: inherit; }
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
+    background-color: #000000;
+    min-height: 100vh;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+    position: relative;
+}
+
+.back-btn {
+    position: absolute;
+    left: 40px;
+    background: none;
+    border: none;
+    color: #cccccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    text-decoration: none;
+}
+.back-btn:hover {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.header-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-form-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px 30px;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.edit-form { display: flex; flex-direction: column; gap: 25px; }
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #cccccc;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.form-group textarea { resize: vertical; min-height: 90px; }
+
+.save-btn {
+    width: 100%;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+    margin-top: 10px;
+}
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
+
+.policy-box {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 24px;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 60px;
+    border: 1px solid rgba(52, 152, 219, 0.15);
+}
+.policy-box h3 { color: #3498db; margin: 0 0 10px; font-size: 1.2rem; }
+.policy-box p { color: #cccccc; margin: 0 0 14px; line-height: 1.5; }
+.policy-link {
+    color: #3498db;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+.policy-link:hover { color: #5dade2; text-decoration: underline; }
+
+#site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 0;
+    color: #999;
+    font-size: 13px;
+    text-align: center;
+    background-color: #000000;
+    z-index: 1000;
+}
+#site-footer a {
+    color: #3498db;
+    text-decoration: none;
+    margin-left: 6px;
+    transition: color 0.2s;
+}
+#site-footer a:hover {
+    color: #5dade2;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .header { flex-direction: column; padding: 15px; gap: 12px; }
+    .back-btn { position: static; margin-bottom: -6px; }
+    .edit-form-card, .policy-box { padding: 25px 15px; margin-bottom: 30px; }
+}

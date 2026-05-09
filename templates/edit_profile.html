@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepTouch — Редактирование профиля</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_edit_profile.css') }}">
+</head>
+<body>
+    <header class="header edit-header">
+        <a href="{{ url_for('main_') }}" class="nav-button back-btn">← Назад</a>
+        <h2 class="header-title">Редактирование профиля</h2>
+    </header>
+
+    <main class="container">
+        <div class="edit-form-card">
+            <form method="POST" action="{{ url_for('edit_profile') }}" class="edit-form">
+                <div class="form-group">
+                    <label for="username">Имя пользователя:</label>
+                    <input type="text" id="username" name="username"
+                           value="{{ current_username }}" required maxlength="30"
+                           placeholder="Введите новое имя...">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Описание:</label>
+                    <textarea id="bio" name="bio" rows="4" maxlength="150"
+                              placeholder="Расскажите о себе...">{{ current_bio }}</textarea>
+                </div>
+
+                <button class="save-btn">Сохранить изменения</button>
+            </form>
+        </div>
+
+        <div class="policy-box">
+            <h3>Конфиденциальность</h3>
+            <p>Ваши данные хранятся в зашифрованном виде и не передаются третьим лицам.</p>
+            <a href="{{ url_for('policy') }}" class="policy-link">Подробнее о Политике конфиденциальности →</a>
+        </div>
+    </main>
+
+    <div id="site-footer">
+        © 2026 KeepTouch. Все права защищены.
+    </div>
+</body>
+</html>

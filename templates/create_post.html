@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepTouch — Создание поста</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_create_post.css') }}">
+</head>
+<body>
+    <header class="header edit-header">
+        <a href="{{ url_for('main_') }}" class="back-btn">← Назад</a>
+        <h2 class="header-title">Создание поста</h2>
+    </header>
+
+    <main class="container">
+        <div class="edit-form-card">
+            <form class="edit-form" method="POST" enctype="multipart/form-data" action="{{ url_for('create_post') }}">
+                <div class="form-group">
+                    <label for="postImage">Выберите фото (JPG/JPEG):</label>
+                    <input type="file" id="postImage" name="image" accept="image/jpeg, image/jpg, image/png" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="postCaption">✍ Описание:</label>
+                    <textarea id="postCaption" name="caption" rows="4" placeholder="Напишите что-нибудь..." required></textarea>
+                </div>
+
+                <button type="submit" class="save-btn">Опубликовать</button>
+            </form>
+        </div>
+    </main>
+
+    <div id="site-footer">
+        © 2026 KeepTouch. Все права защищены. | <a href="{{ url_for('policy') }}">Политика конфиденциальности</a>
+    </div>
+</body>
+</html>

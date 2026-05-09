@@ -25,16 +25,19 @@
                 <div class="stat"><span class="stat-num">0</span><span class="stat-label">Подписок</span></div>
             </div>
 
-            <button class="edit-profile-btn">Редактировать профиль</button>
+            <a href="edit_profile" class="edit-profile-btn">Редактировать профиль</a>
         </div>
 
         <h2 class="section-title">Мои публикации</h2>
+        <div class="create-post-wrapper">
+            <a href="create_post" class="create-post-section-btn">+ Сделать пост</a>
+        </div>
         {% if user_posts %}
         <div class="posts-grid">
             {% for post in user_posts %}
             <article class="post-card">
-                {% if post.image_url %}
-                    <img src="{{ post.image_url }}" alt="Фото" class="post-image" loading="lazy">
+                {% if post.image_path %}
+                    <img src="{{ post.image_path }}" alt="Фото" class="post-image" loading="lazy">
                 {% else %}
                     <div class="post-image-placeholder">📷</div>
                 {% endif %}

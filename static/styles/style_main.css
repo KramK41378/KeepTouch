@@ -213,6 +213,31 @@ body {
     color: #5dade2;
     text-decoration: underline;
 }
-
+.edit-profile-btn {
+    display: inline-block;
+    text-decoration: none;
+}
+.create-post-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.create-post-section-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+}
+.create-post-section-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
 @media (max-width: 768px) {
     .header {
+    }

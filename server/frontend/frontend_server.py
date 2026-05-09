@@ -1,8 +1,9 @@
 from threading import Thread
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, redirect
 from werkzeug.exceptions import BadRequest
 from templates.joke.joke_api import get_joke
+from flask import request
 
 app = Flask(f'{__name__}.frontend')
 
@@ -57,4 +58,33 @@ def posts():
 
 @app.route('/main')
 def main_():
-    return render_template('main.html')
+    username = "Алексей"
+    bio = "Разработчик и дизайнер. Люблю создавать красивые интерфейсы."
+    user_posts = [
+        {
+            'image_path': 'static/images/icon.png',
+            'caption': 'Мой первый пост в KeepTouch!',
+            'author': 'alex_dev'
+        }
+    ]
+    return render_template(
+        'main.html',
+        username=username,
+        bio=bio,
+        posts_count=len(user_posts),
+        user_posts=user_posts
+    )
+
+@app.route('/edit_profile')
+def edit_profile():
+    return render_template('edit_profile.html')
+
+
+@app.route('/create_post', methods=['GET', 'POST'])
+def create_post():
+    if request.method == 'POST':
+        image = request.files['image']
+        caption = request.form.get('caption', '').strip()
+        return render_template('main.html')
+
+    return render_template('create_post.html')
