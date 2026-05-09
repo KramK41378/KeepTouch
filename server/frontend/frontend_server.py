@@ -46,7 +46,14 @@ def policy():
 
 @app.route('/posts')
 def posts():
-    return render_template('main_posts.html')
+    posts = [
+        {
+            'image_path': 'static/images/icon.png',
+            'caption': 'Мой первый пост в KeepTouch!',
+            'author': 'alex_dev'
+        }
+    ]
+    return render_template('main_posts.html', posts=posts)
 
 @app.route('/main')
 def main_():
