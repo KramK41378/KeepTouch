@@ -16,7 +16,7 @@
         © 2026 KeepTouch. Все права защищены. | <a href="policy">Политика конфиденциальности</a>
     </div>
     <div class="joke-container" id="jokeContainer">
-        Загрузка шутки...
+        {{ joke_text | default("Загрузка шутки...", true) }}
     </div>
 </body>
 </html>

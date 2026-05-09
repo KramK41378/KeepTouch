@@ -2,6 +2,7 @@ from threading import Thread
 
 from flask import Flask, jsonify, render_template
 from werkzeug.exceptions import BadRequest
+from templates.joke.joke_api import get_joke
 
 app = Flask(f'{__name__}.frontend')
 
@@ -25,7 +26,11 @@ def start_frontend_server() -> Thread:
 
 @app.route('/')
 def start_menu():
-    return render_template('Start_screen.html')
+    try:
+        joke_text = get_joke()
+    except Exception:
+        joke_text = "Сегодня шутка отдыхает. Попробуйте позже"
+    return render_template('Start_screen.html', joke_text=joke_text)
 
 @app.route('/login')
 def login():
