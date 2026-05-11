@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from threading import Thread
 
 import requests
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required
 from flask import Flask, jsonify, render_template, redirect
 from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
@@ -68,7 +68,8 @@ def login():
                                                 UserORM.username == form.username.data))
         user: UserORM = database_sess.execute(user_select).scalar()
         if user and user.check_password(form.password.data):
-            login_user(user)
+            print(form.remember_me.data)
+            login_user(user, remember=form.remember_me.data)
             return redirect('/posts')
         return render_template('login.html', form=form,
                                login_error='Неверное имя пользователя или пароль')
@@ -109,10 +110,9 @@ def policy():
 
 
 @app.route('/posts')
+@login_required
 def posts():
     response = requests.get(f'{BACKEND_IP}/posts')
-    print(f'{BACKEND_IP}/posts')
-    print(response.status_code)
     posts_list = [Post.model_validate(p) for p in response.json()]
     return render_template('main_posts.html',
                            posts=[post.to_html_compatible() for post in posts_list])
