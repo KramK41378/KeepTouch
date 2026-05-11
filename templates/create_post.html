@@ -15,8 +15,8 @@
 
     <main class="container">
         <div class="edit-form-card">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <form class="edit-form" method="POST" enctype="multipart/form-data" action="{{ url_for('create_post') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label for="postImage">Выберите фото (JPG/JPEG/PNG):</label>
                     <input type="file" id="postImage" name="image" accept="image/jpeg, image/jpg, image/png" required>

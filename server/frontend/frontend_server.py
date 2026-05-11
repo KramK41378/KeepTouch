@@ -160,7 +160,7 @@ def create_post():
 
         response = requests.post(f'{BACKEND_IP}/posts', json={
             'text': caption,
-            'image': save_path,
+            'image': f'static/images/posts/{filename}',
             'author_username': current_user.username,
         })
 
