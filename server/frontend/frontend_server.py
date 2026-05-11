@@ -7,7 +7,7 @@ from threading import Thread
 import requests
 from flask_login import LoginManager, login_user, login_required, current_user
 from flask import Flask, jsonify, render_template, redirect
-from sqlalchemy import select, or_
+from sqlalchemy import select, or_, update
 from sqlalchemy.orm import Session
 from werkzeug.exceptions import BadRequest
 
@@ -142,9 +142,43 @@ def user_profile(username: str):
                            is_own_profile=is_own_profile)
 
 
-@app.route('/edit_profile')
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
-    return render_template('edit_profile.html')
+    if request.method == 'POST':
+        new_name = request.form.get('username', '').strip()
+        new_bio  = request.form.get('bio', '').strip()
+        image    = request.files.get('profile_image')
+
+        updates = {}
+
+        if new_name:
+            updates['name'] = new_name
+        if new_bio is not None:
+            updates['description'] = new_bio
+
+        if image and image.filename:
+            filename = f"avatar_{current_user.username}_{uuid.uuid4().hex[:8]}"
+            filename += os.path.splitext(image.filename)[1]
+            save_path = os.path.join('static', 'images', 'avatars', filename)
+            os.makedirs(os.path.dirname(save_path), exist_ok=True)
+            image.save(save_path)
+            updates['profile_image_path'] = f'images/avatars/{filename}'
+
+        if updates:
+            with create_session() as session:
+                session.execute(
+                    update(UserORM)
+                    .where(UserORM.username == current_user.username)
+                    .values(**updates)
+                )
+                session.commit()
+
+        return redirect(f'/users/{current_user.username}')
+
+    return render_template('edit_profile.html',
+                           current_username=current_user.name,
+                           current_bio=current_user.description)
 
 
 @app.route('/create_post', methods=['GET', 'POST'])

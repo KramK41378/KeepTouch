@@ -15,7 +15,15 @@
 
     <div class="container">
         <div class="profile-header">
-            <div class="avatar">👤</div>
+            <div class="avatar">
+                {% if profile_user.profile_image_path != 'placeholder.png' %}
+                    <img src="{{ url_for('static', filename=profile_user.profile_image_path) }}"
+                         alt="👤"
+                         class="avatar-img">
+                {% else %}
+                    <span class="avatar-placeholder">👤</span>
+                {% endif %}
+            </div>
             <h1 class="username">@{{ profile_user.username }}</h1>
             <p class="bio">{{ profile_user.description }}</p>
 

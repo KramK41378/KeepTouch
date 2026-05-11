@@ -64,14 +64,21 @@ body {
 .avatar {
     width: 120px;
     height: 120px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
     border-radius: 50%;
     margin: 0 auto 20px;
+    overflow: hidden;                              /* картинка не вылезает */
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #3498db, #2980b9); /* фон виден когда нет фото */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     /* обрезает по центру, не сжимает */
+    display: block;
 }
 .username {
     margin: 0 0 10px;

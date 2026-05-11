@@ -46,7 +46,7 @@ class UserORM(SqlAlchemyBase, UserMixin):
     name: Mapped[str] = mapped_column(String)
     username: Mapped[str] = mapped_column(String, unique=True, primary_key=True)
     email: Mapped[str] = mapped_column(String, unique=True)
-    profile_image_path: Mapped[str] = mapped_column(String, default='date/placeholder.png')
+    profile_image_path: Mapped[str] = mapped_column(String, default='placeholder.png')
     description: Mapped[str] = mapped_column(String, default='')
     hashed_password: Mapped[str] = mapped_column(String)
 
