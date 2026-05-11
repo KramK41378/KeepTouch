@@ -1,3 +1,5 @@
+import os
+import uuid
 from hashlib import sha512
 from sqlalchemy.exc import IntegrityError
 from threading import Thread
@@ -16,7 +18,6 @@ from models import UserORM, Post
 from joke.joke_api import get_joke
 from flask import request
 
-
 app = Flask(f'{__name__}.frontend')
 app.config['SECRET_KEY'] = 'yalms'
 
@@ -24,6 +25,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 BACKEND_IP = 'http://localhost:8080'
+UPLOAD_FOLDER = 'data'
 
 
 @login_manager.user_loader
@@ -146,10 +148,26 @@ def edit_profile():
 
 
 @app.route('/create_post', methods=['GET', 'POST'])
+@login_required
 def create_post():
     if request.method == 'POST':
         image = request.files['image']
         caption = request.form.get('caption', '').strip()
-        return render_template('main.html')
+
+        filename = f"{current_user.username}_{uuid.uuid4().hex[:8]}_{image.filename}"
+        save_path = os.path.join(UPLOAD_FOLDER, filename)
+        image.save(save_path)
+
+        response = requests.post(f'{BACKEND_IP}/posts', json={
+            'text': caption,
+            'image': save_path,
+            'author_username': current_user.username,
+        })
+
+        if response.status_code == 201:
+            return redirect(f'/users/{current_user.username}')
+        else:
+            return render_template('create_post.html',
+                                   error='Ошибка при публикации поста')
 
     return render_template('create_post.html')
