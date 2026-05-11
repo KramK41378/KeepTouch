@@ -22,7 +22,7 @@ class User(BaseModel):
     hashed_password: str
     created_at: datetime | None = Field(default=None, json_schema_extra={"readOnly": True})
 
-    posts: list['Post'] | None = None   # ← строка в кавычках
+    posts: list['Post'] | None = None
 
     @classmethod
     def from_custom_orm(cls, user_orm: 'UserORM') -> 'User':

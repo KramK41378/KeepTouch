@@ -11,7 +11,7 @@ from .user import User, UserORM
 class Post(BaseModel):
     text: str
     image: str
-    author: User
+    author_username: str
     created_at: datetime = Field(default=None)
 
     @classmethod
@@ -20,14 +20,14 @@ class Post(BaseModel):
             text=post_orm.text,
             image=post_orm.image,
             created_at=post_orm.created_at,
-            author=author or User.from_custom_orm(post_orm.author),
+            author_username=post_orm.author_username,
         )
 
     def to_html_compatible(self) -> dict[str, str]:
         return {
             'image_path': self.image,
             'caption': self.text,
-            'author': self.author.username
+            'author': self.author_username
         }
 
 

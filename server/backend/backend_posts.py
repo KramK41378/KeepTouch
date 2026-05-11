@@ -11,7 +11,7 @@ from .backend_server import app
 def get_posts_by_query(query: Select) -> list[Post]:
     with create_session() as session:
         raw_posts = session.execute(query).scalars().all()
-        posts: list[Post] = [Post.from_custom_orm(post).model_dump() for post in raw_posts]
+        posts: list[Post] = [Post.from_custom_orm(post).model_dump(mode='json') for post in raw_posts]
     return posts
 
 

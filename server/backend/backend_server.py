@@ -17,6 +17,7 @@ def handle_bad_request(e):
 
 
 def start_backend_server() -> Thread:
-    backend_thread = Thread(target=app.run, daemon=True, kwargs={'port': 8080})
+    # backend_thread = Thread(target=app.run, daemon=True, kwargs={'port': 8080})
+    backend_thread = Thread(target=app.run, kwargs={'port': 8080}) # без daemon если основной поток
     backend_thread.start()
     return backend_thread
