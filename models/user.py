@@ -1,4 +1,3 @@
-from __future__ import annotations
 from hashlib import sha512
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -53,10 +52,10 @@ class UserORM(SqlAlchemyBase, UserMixin):
 
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
 
-    posts: Mapped[list[PostORM]] = relationship(back_populates='author')
+    posts: Mapped[list['PostORM']] = relationship(back_populates='author')
 
     @classmethod
-    def from_pydantic_model(cls, model: User) -> UserORM:
+    def from_pydantic_model(cls, model: User) -> 'UserORM':
         return cls(
             name=model.name,
             username=model.username,
