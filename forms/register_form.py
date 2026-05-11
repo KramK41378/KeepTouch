@@ -19,6 +19,4 @@ class RegisterForm(FlaskForm):
         DataRequired(),
         EqualTo('password', message='Пароли не совпадают')
     ])
-    # profile_image - не знаю как сделать
-    description = StringField('Расскажите о себе', validators=[DataRequired()])
     submit = SubmitField('Зарегистрироваться')

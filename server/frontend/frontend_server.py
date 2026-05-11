@@ -1,3 +1,5 @@
+from hashlib import sha512
+from sqlite3 import IntegrityError
 from threading import Thread
 
 from flask_login import LoginManager, login_user
@@ -8,6 +10,7 @@ from werkzeug.exceptions import BadRequest
 
 from databases import create_session
 from forms.login_form import LoginForm
+from forms.register_form import RegisterForm
 from models import UserORM
 from joke.joke_api import get_joke
 from flask import request
@@ -69,9 +72,32 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    form = RegisterForm()
+    if form.validate_on_submit():
+        database_sess: Session = create_session()
+        try:
+            hashed_password = sha512(form.password.data.encode('utf-8'), usedforsecurity=True).hexdigest()
+            user = UserORM(
+                name=form.fullname.data,
+                username=form.username.data,
+                email=form.email.data,
+                hashed_password=hashed_password,
+            )
+            database_sess.add(user)
+            database_sess.commit()
+            login_user(user)
+            return redirect('/posts')
+
+        except IntegrityError:
+            database_sess.rollback()
+            return render_template('register.html', form=form,
+                                   register_error='Пользователь с таким именем или email уже существует')
+        finally:
+            database_sess.close()
+
+    return render_template('register.html', form=form)
 
 
 @app.route('/policy')

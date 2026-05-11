@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KeepTouch — Регистрация</title>
     <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_register.css') }}">
@@ -11,30 +11,57 @@
     <div class="content">
         <img src="{{ url_for('static', filename='images/KeepTouchWord.png') }}" alt="KeepTouch" class="logo-img">
         <h1>Регистрация в KeepTouch</h1>
-        <form id="registerForm">
+
+        <form id="registerForm" method="POST" action="/register">
+            {{ form.hidden_tag() }}
+
             <div class="form-group">
-                <label for="fullname">Полное имя</label>
-                <input type="text" id="fullname" name="fullname" placeholder="Введите ваше полное имя" required>
+                {{ form.fullname.label }}
+                {{ form.fullname(placeholder="Введите ваше полное имя", class="form-input") }}
+                {% if form.fullname.errors %}
+                    <span class="field-error">{{ form.fullname.errors[0] }}</span>
+                {% endif %}
             </div>
+
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Введите ваш email" required>
+                {{ form.email.label }}
+                {{ form.email(placeholder="Введите ваш email", class="form-input") }}
+                {% if form.email.errors %}
+                    <span class="field-error">{{ form.email.errors[0] }}</span>
+                {% endif %}
             </div>
+
             <div class="form-group">
-                <label for="username">Имя пользователя</label>
-                <input type="text" id="username" name="username" placeholder="Придумайте имя пользователя" required>
+                {{ form.username.label }}
+                {{ form.username(placeholder="Придумайте имя пользователя", class="form-input") }}
+                {% if form.username.errors %}
+                    <span class="field-error">{{ form.username.errors[0] }}</span>
+                {% endif %}
             </div>
+
             <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" placeholder="Придумайте пароль" required>
-                <div class="password-hint">Пароль должен содержать не менее 8 символов, включая буквы и цифры</div>
+                {{ form.password.label }}
+                {{ form.password(placeholder="Придумайте пароль", class="form-input") }}
+                <div class="password-hint">Минимум 8 символов, буквы и цифры</div>
+                {% if form.password.errors %}
+                    <span class="field-error">{{ form.password.errors[0] }}</span>
+                {% endif %}
             </div>
+
             <div class="form-group">
-                <label for="confirm-password">Подтвердите пароль</label>
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="Повторите пароль" required>
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password(placeholder="Повторите пароль", class="form-input") }}
+                {% if form.confirm_password.errors %}
+                    <span class="field-error">{{ form.confirm_password.errors[0] }}</span>
+                {% endif %}
             </div>
-            <button type="submit" class="register-btn">Зарегистрироваться</button>
-            <a href="login" class="login-link">Уже есть аккаунт? Войти</a>
+
+            {% if register_error %}
+                <div class="login-error">{{ register_error }}</div>
+            {% endif %}
+
+            {{ form.submit(class="register-btn") }}
+            <a href="/login" class="login-link">Уже есть аккаунт? Войти</a>
         </form>
     </div>
     <div id="site-footer">
