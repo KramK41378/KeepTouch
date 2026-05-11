@@ -23,12 +23,6 @@ class Post(BaseModel):
             author=author or User.from_custom_orm(post_orm.author),
         )
 
-    def get_html(self) -> str:
-        html_test = f'''<pre>{self.text}</pre>'''
-        for image in self.images:
-            html_test += f'''<img src="{image}" alt="KeepTouch™">'''
-        return html_test
-
     def to_html_compatible(self) -> dict[str, str]:
         return {
             'image_path': self.image,
@@ -56,5 +50,5 @@ class PostORM(SqlAlchemyBase):
     def from_pydantic_model(cls, model: Post) -> 'PostORM':
         return cls(
             text=model.text,
-            images=model.image,
+            image=model.image,
         )

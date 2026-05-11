@@ -17,7 +17,7 @@ def get_posts_by_query(query: Select) -> list[Post]:
 
 @app.route('/posts', methods=['GET'])
 def get_posts():  # list[Post]
-    query = select(PostORM).order_by(PostORM.timestamp)
+    query = select(PostORM).order_by(PostORM.created_at)
 
     posts: list[Post] = get_posts_by_query(query)
 
@@ -26,7 +26,7 @@ def get_posts():  # list[Post]
 
 @app.route('/posts/<int:post_id>', methods=['GET'])
 def get_post_by_id(post_id: int):
-    query = select(PostORM).where(PostORM.id == post_id).order_by(PostORM.timestamp)
+    query = select(PostORM).where(PostORM.id == post_id).order_by(PostORM.created_at)
 
     post: Post = get_posts_by_query(query)[0]
 
@@ -35,7 +35,7 @@ def get_post_by_id(post_id: int):
 
 @app.route('/posts/<string:author>', methods=['GET'])
 def get_posts_by_author(author: str):
-    query = select(PostORM).where(PostORM.author == author).order_by(PostORM.timestamp)
+    query = select(PostORM).where(PostORM.author == author).order_by(PostORM.created_at)
 
     posts: list[Post] = get_posts_by_query(query)
 
