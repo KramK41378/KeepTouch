@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KeepTouch — Вход</title>
     <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_login.css') }}">
@@ -11,23 +11,37 @@
     <div class="content">
         <img src="{{ url_for('static', filename='images/KeepTouchWord.png') }}" alt="KeepTouch" class="logo-img">
         <h1>Вход в KeepTouch</h1>
-        <form id="loginForm">
+
+        <form id="loginForm" method="POST" action="/login">
+            {{ form.hidden_tag() }}
+
             <div class="form-group">
-                <label for="username">Имя пользователя или email</label>
-                <input type="text" id="username" name="username" placeholder="Введите имя пользователя" required>
+                {{ form.username.label }}
+                {{ form.username(placeholder="Введите имя пользователя", class="form-input") }}
+                {% if form.username.errors %}
+                    <span class="field-error">{{ form.username.errors[0] }}</span>
+                {% endif %}
             </div>
+
             <div class="form-group">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+                {{ form.password.label }}
+                {{ form.password(placeholder="Введите пароль", class="form-input") }}
+                {% if form.password.errors %}
+                    <span class="field-error">{{ form.password.errors[0] }}</span>
+                {% endif %}
             </div>
-            <button type="submit" class="login-btn">Войти</button>
-            <a href="register" class="register-link">Создать новый аккаунт</a>
-            <a href="#" class="forgot-password">Забыли пароль?</a>
+
+            {% if login_error %}
+                <div class="login-error">{{ login_error }}</div>
+            {% endif %}
+
+            {{ form.submit(class="login-btn") }}
+            <a href="/register" class="register-link">Создать новый аккаунт</a>
+<!--            <a href="#" class="forgot-password">Забыли пароль?</a>-->
         </form>
     </div>
     <div id="site-footer">
         © 2026 KeepTouch. Все права защищены. | <a href="{{ url_for('policy') }}">Политика конфиденциальности</a>
     </div>
-
 </body>
 </html>

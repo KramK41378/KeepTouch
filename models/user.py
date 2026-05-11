@@ -1,13 +1,17 @@
+from __future__ import annotations
 from hashlib import sha512
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from flask_login import UserMixin
 from pydantic import BaseModel, Field
-from sqlalchemy import String, JSON, DateTime, func
+from sqlalchemy import String, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from databases import SqlAlchemyBase
-from .post import Post, PostORM
+
+if TYPE_CHECKING:
+    from .post import Post, PostORM
 
 
 class User(BaseModel):
@@ -22,7 +26,7 @@ class User(BaseModel):
     posts: list[Post] | None = None
 
     @classmethod
-    def from_custom_orm(cls, user_orm: 'UserORM') -> 'User':
+    def from_custom_orm(cls, user_orm: UserORM) -> User:
         user = cls(
             name=user_orm.name,
             username=user_orm.username,
@@ -32,6 +36,7 @@ class User(BaseModel):
             hashed_password=user_orm.hashed_password,
             created_at=user_orm.created_at,
         )
+        from .post import Post  # ← локальный импорт только здесь
         user.posts = [Post.from_custom_orm(post, user) for post in user_orm.posts]
         return user
 
@@ -40,22 +45,18 @@ class UserORM(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     name: Mapped[str] = mapped_column(String)
-    username: Mapped[str] = mapped_column(String, unique=True)
+    username: Mapped[str] = mapped_column(String, unique=True, primary_key=True)
     email: Mapped[str] = mapped_column(String, unique=True)
     profile_image_path: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     hashed_password: Mapped[str] = mapped_column(String)
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
 
-    posts: Mapped[list[PostORM]] = relationship(back_populates='users')
+    posts: Mapped[list[PostORM]] = relationship(back_populates='users')  # строка — ОК
 
     @classmethod
-    def from_pydantic_model(cls, model: User) -> 'UserORM':
+    def from_pydantic_model(cls, model: User) -> UserORM:
         return cls(
             name=model.name,
             username=model.username,
@@ -65,7 +66,7 @@ class UserORM(SqlAlchemyBase, UserMixin):
             hashed_password=model.hashed_password,
         )
 
-    def get_id(self):
+    def get_id(self) -> str:
         return str(self.username)
 
     def check_password(self, password: str) -> bool:

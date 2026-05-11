@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 
 from databases import create_session
 from forms.login_form import LoginForm
-from models import User, UserORM
+from models import UserORM
 from templates.joke.joke_api import get_joke
 from flask import request
 
@@ -50,7 +50,7 @@ def start_menu():
         joke_text = get_joke()
     except Exception:
         joke_text = "Сегодня шутка отдыхает. Попробуйте позже"
-    return render_template('Start_screen.html', joke_text=joke_text)
+    return render_template('start_screen.html', joke_text=joke_text)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -64,6 +64,8 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             return redirect('/posts')
+        return render_template('login.html', form=form,
+                               login_error='Неверное имя пользователя или пароль')
     return render_template('login.html', form=form)
 
 
