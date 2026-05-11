@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask_login import UserMixin
 from pydantic import BaseModel, Field
 from sqlalchemy import String, JSON, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -11,6 +12,7 @@ from .post import Post, PostORM
 class User(BaseModel):
     name: str
     username: str
+    email: str
     profile_image_path: str
     description: str
     hashed_password: str
@@ -23,6 +25,7 @@ class User(BaseModel):
         user = cls(
             name=user_orm.name,
             username=user_orm.username,
+            email=user_orm.email,
             profile_image_path=user_orm.profile_image_path,
             description=user_orm.description,
             hashed_password=user_orm.hashed_password,
@@ -31,11 +34,13 @@ class User(BaseModel):
         user.posts = [Post.from_custom_orm(post, user) for post in user_orm.posts]
         return user
 
-class UserORM(SqlAlchemyBase):
+
+class UserORM(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     name: Mapped[str] = mapped_column(String)
     username: Mapped[str] = mapped_column(String, unique=True)
+    email: Mapped[str] = mapped_column(String, unique=True)
     profile_image_path: Mapped[str] = mapped_column(String)
     description: Mapped[str] = mapped_column(String)
     hashed_password: Mapped[str] = mapped_column(String)
@@ -53,7 +58,11 @@ class UserORM(SqlAlchemyBase):
         return cls(
             name=model.name,
             username=model.username,
+            email=model.email,
             profile_image_path=model.profile_image_path,
             description=model.description,
             hashed_password=model.hashed_password,
         )
+
+    def get_id(self):
+        return str(self.username)

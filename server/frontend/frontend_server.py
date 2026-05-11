@@ -1,11 +1,26 @@
 from threading import Thread
 
+from flask_login import LoginManager, login_user
 from flask import Flask, jsonify, render_template, redirect
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 from werkzeug.exceptions import BadRequest
+
+from databases import create_session
+from forms.login_form import LoginForm
+from models import User
 from templates.joke.joke_api import get_joke
 from flask import request
 
-app = Flask(f'{__name__}.frontend')
+login_manager = LoginManager()
+app = Flask(__name__)
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(username):
+    db_sess = create_session()
+    return db_sess.get(User, username)
 
 
 @app.route('/status', methods=['GET'])
@@ -21,7 +36,7 @@ def handle_bad_request(e):
 def start_frontend_server() -> Thread:
     frontend_thread = Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8000})
     frontend_thread.start()
-    print('http://0.0.0.0:8000')
+    # print('http://0.0.0.0:8000')
     return frontend_thread
 
 
@@ -33,17 +48,29 @@ def start_menu():
         joke_text = "Сегодня шутка отдыхает. Попробуйте позже"
     return render_template('Start_screen.html', joke_text=joke_text)
 
-@app.route('/login')
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        database_sess: Session = create_session()
+        user_select = select(User).where(User.email == form.username.data | User.username == form.username.data)
+        user = database_sess.execute(user_select).scalar()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            return redirect('/posts')
+    return render_template('login.html', form=form)
+
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
+
 @app.route('/policy')
 def policy():
     return render_template('policy.html')
+
 
 @app.route('/posts')
 def posts():
@@ -55,6 +82,7 @@ def posts():
         }
     ]
     return render_template('main_posts.html', posts=posts)
+
 
 @app.route('/main')
 def main_():
@@ -74,6 +102,7 @@ def main_():
         posts_count=len(user_posts),
         user_posts=user_posts
     )
+
 
 @app.route('/edit_profile')
 def edit_profile():
