@@ -1,4 +1,3 @@
-from __future__ import annotations
 from hashlib import sha512
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -23,10 +22,11 @@ class User(BaseModel):
     hashed_password: str
     created_at: datetime | None = Field(default=None, json_schema_extra={"readOnly": True})
 
-    posts: list[Post] | None = None
+    posts: list['Post'] | None = None   # ← строка в кавычках
 
     @classmethod
-    def from_custom_orm(cls, user_orm: UserORM) -> User:
+    def from_custom_orm(cls, user_orm: 'UserORM') -> 'User':
+        from .post import Post
         user = cls(
             name=user_orm.name,
             username=user_orm.username,
@@ -36,7 +36,6 @@ class User(BaseModel):
             hashed_password=user_orm.hashed_password,
             created_at=user_orm.created_at,
         )
-        from .post import Post  # ← локальный импорт только здесь
         user.posts = [Post.from_custom_orm(post, user) for post in user_orm.posts]
         return user
 

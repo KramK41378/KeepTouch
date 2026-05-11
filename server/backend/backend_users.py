@@ -31,11 +31,11 @@ def get_user(username: str):  # -> User
     query = select(UserORM).where(UserORM.username == username)
 
     result: list[User] = get_users_by_query(query)
-    print(result)
+    # print(result)
     if not result:
         return jsonify({'error': 'no such user'}), 404
 
-    return jsonify(result[0])
+    return jsonify(result[0].model_dump())
 
 
 @app.route('/check_user_password', methods=['POST'])

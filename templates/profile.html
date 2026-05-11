@@ -55,7 +55,11 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="empty-posts">У вас пока нет публикаций.</div>
+            {% if is_own_profile %}
+                <div class="empty-posts">У вас пока нет публикаций.</div>
+            {% else %}
+                <div class="empty-posts">У этого пользователя пока нет публикаций.</div>
+            {% endif %}
         {% endif %}
     </div>
 
