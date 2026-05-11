@@ -129,16 +129,16 @@ def user_profile(username: str):
     if user_resp.status_code == 404:
         return redirect('/')
     profile_user = user_resp.json()
-    print(profile_user)
+    # print(profile_user)
     posts_resp = requests.get(f'{BACKEND_IP}/posts/by/{username}')
     raw_posts = posts_resp.json() if posts_resp.ok else []
     posts_list = [Post.model_validate(p).to_html_compatible() for p in raw_posts]
-    print(posts_list)
+    # print(posts_list)
     is_own_profile = (current_user.username == username)
 
     return render_template('profile.html',
                            profile_user=profile_user,
-                           posts=posts_list,
+                           user_posts=posts_list,
                            is_own_profile=is_own_profile)
 
 
@@ -160,7 +160,7 @@ def create_post():
 
         response = requests.post(f'{BACKEND_IP}/posts', json={
             'text': caption,
-            'image': f'static/images/posts/{filename}',
+            'image': f'images/posts/{filename}',
             'author_username': current_user.username,
         })
 

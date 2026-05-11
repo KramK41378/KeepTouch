@@ -43,7 +43,7 @@
             {% for post in user_posts %}
             <article class="post-card">
                 {% if post.image_path %}
-                    <img src="{{ post.image_path }}" alt="Фото" class="post-image" loading="lazy">
+                    <img src="{{ url_for('static', filename=post['image_path']) }}" alt="Фото" class="post-image" loading="lazy">
                 {% else %}
                     <div class="post-image-placeholder">📷</div>
                 {% endif %}
