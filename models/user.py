@@ -1,3 +1,4 @@
+from __future__ import annotations
 from hashlib import sha512
 from datetime import datetime
 from typing import TYPE_CHECKING
