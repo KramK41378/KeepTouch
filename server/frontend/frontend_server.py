@@ -25,7 +25,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 BACKEND_IP = 'http://localhost:8080'
-UPLOAD_FOLDER = 'data'
+UPLOAD_FOLDER = os.path.join('static', 'images', 'posts')
 
 
 @login_manager.user_loader

@@ -10,8 +10,8 @@ from .backend_server import app
 
 def get_posts_by_query(query: Select) -> list[Post]:
     with create_session() as session:
-        raw_posts = session.execute(query).scalars()
-        posts: list[Post] = [Post.from_custom_orm(post) for post in raw_posts]
+        raw_posts = session.execute(query).scalars().all()
+        posts: list[Post] = [Post.from_custom_orm(post).model_dump() for post in raw_posts]
     return posts
 
 

@@ -12,7 +12,7 @@ from .backend_server import app
 
 def get_users_by_query(query: Select) -> list[User]:
     with create_session() as session:
-        raw_users = session.execute(query).scalars()
+        raw_users = session.execute(query).scalars().all()
         users: list[User] = [User.from_custom_orm(user) for user in raw_users]
     return users
 
