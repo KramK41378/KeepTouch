@@ -2,25 +2,29 @@ from threading import Thread
 
 from flask_login import LoginManager, login_user
 from flask import Flask, jsonify, render_template, redirect
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 from werkzeug.exceptions import BadRequest
 
 from databases import create_session
 from forms.login_form import LoginForm
-from models import User
+from models import User, UserORM
 from templates.joke.joke_api import get_joke
 from flask import request
 
-login_manager = LoginManager()
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yalms'
+
+login_manager = LoginManager()
 login_manager.init_app(app)
 
 
 @login_manager.user_loader
 def load_user(username):
-    db_sess = create_session()
-    return db_sess.get(User, username)
+    db_session = create_session()
+    user_select = select(UserORM).where(UserORM.username == username)
+    return db_session.execute(user_select).scalar()
 
 
 @app.route('/status', methods=['GET'])
@@ -54,8 +58,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         database_sess: Session = create_session()
-        user_select = select(User).where(User.email == form.username.data | User.username == form.username.data)
-        user = database_sess.execute(user_select).scalar()
+        user_select = select(UserORM).where(or_(UserORM.email == form.username.data,
+                                                UserORM.username == form.username.data))
+        user: UserORM = database_sess.execute(user_select).scalar()
         if user and user.check_password(form.password.data):
             login_user(user)
             return redirect('/posts')

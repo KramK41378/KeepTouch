@@ -1,3 +1,4 @@
+from hashlib import sha512
 from datetime import datetime
 
 from flask_login import UserMixin
@@ -66,3 +67,7 @@ class UserORM(SqlAlchemyBase, UserMixin):
 
     def get_id(self):
         return str(self.username)
+
+    def check_password(self, password: str) -> bool:
+        hashed = sha512(password.encode('utf-8'), usedforsecurity=True).hexdigest()
+        return hashed == self.hashed_password
