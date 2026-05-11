@@ -9,11 +9,11 @@ from werkzeug.exceptions import BadRequest
 from databases import create_session
 from forms.login_form import LoginForm
 from models import UserORM
-from templates.joke.joke_api import get_joke
+from joke.joke_api import get_joke
 from flask import request
 
 
-app = Flask(__name__)
+app = Flask(f'{__name__}.frontend')
 app.config['SECRET_KEY'] = 'yalms'
 
 login_manager = LoginManager()
