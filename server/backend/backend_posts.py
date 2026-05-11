@@ -17,7 +17,7 @@ def get_posts_by_query(query: Select) -> list[Post]:
 
 @app.route('/posts')
 def get_posts():  # list[Post]
-    query = select(PostORM).order_by(PostORM.created_at)
+    query = select(PostORM).order_by(PostORM.created_at.desc())
 
     posts: list[Post] = get_posts_by_query(query)
 
