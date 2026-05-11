@@ -16,8 +16,8 @@
     <div class="container">
         <div class="profile-header">
             <div class="avatar">👤</div>
-            <h1 class="username">{{ username|default('Пользователь') }}</h1>
-            <p class="bio">{{ bio|default('Здесь пока нет описания...') }}</p>
+            <h1 class="username">@{{ profile_user.username }}</h1>
+            <p class="bio">{{ profile_user.description }}</p>
 
             <div class="stats">
                 <div class="stat"><span class="stat-num">{{ posts_count|default(0) }}</span><span class="stat-label">Постов</span></div>
@@ -25,12 +25,18 @@
                 <div class="stat"><span class="stat-num">0</span><span class="stat-label">Подписок</span></div>
             </div>
 
-            <a href="edit_profile" class="edit-profile-btn">Редактировать профиль</a>
+            {% if is_own_profile %}
+                <a href="/edit_profile" class="edit-profile-btn">Редактировать профиль</a>
+            {% endif %}
         </div>
 
-        <h2 class="section-title">Мои публикации</h2>
+        <h2 class="section-title">
+            {% if is_own_profile %}Мои публикации{% else %}Публикации {{ profile_user.username }}{% endif %}
+        </h2>
         <div class="create-post-wrapper">
-            <a href="create_post" class="create-post-section-btn">+ Сделать пост</a>
+            {% if is_own_profile %}
+                <a href="/create_post" class="create-post-section-btn">+ Сделать пост</a>
+            {% endif %}
         </div>
         {% if user_posts %}
         <div class="posts-grid">

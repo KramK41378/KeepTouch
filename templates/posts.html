@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="{{ url_for('main_') }}" class="nav-button">Профиль</a>
+        <a href="/users/{{ current_user.username }}" class="nav-button">Профиль</a>
         <button class="nav-button active" id="postsBtn">Посты</button>
     </div>
 

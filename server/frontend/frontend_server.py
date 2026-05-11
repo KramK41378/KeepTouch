@@ -116,28 +116,28 @@ def policy():
 def posts():
     response = requests.get(f'{BACKEND_IP}/posts')
     posts_list = [Post.model_validate(p) for p in response.json()]
-    return render_template('main_posts.html',
+    return render_template('posts.html',
                            posts=[post.to_html_compatible() for post in posts_list])
 
 
-@app.route('/main')
-def main_():
-    username = "Алексей"
-    bio = "Разработчик и дизайнер. Люблю создавать красивые интерфейсы."
-    user_posts = [
-        {
-            'image_path': 'static/images/icon.png',
-            'caption': 'Мой первый пост в KeepTouch!',
-            'author': 'alex_dev'
-        }
-    ]
-    return render_template(
-        'main.html',
-        username=username,
-        bio=bio,
-        posts_count=len(user_posts),
-        user_posts=user_posts
-    )
+@app.route('/users/<string:username>')
+@login_required
+def user_profile(username: str):
+    user_resp = requests.get(f'{BACKEND_IP}/users/{username}')
+    if user_resp.status_code == 404:
+        return redirect('/')
+    profile_user = user_resp.json()
+
+    posts_resp = requests.get(f'{BACKEND_IP}/posts/by/{username}')
+    raw_posts = posts_resp.json() if posts_resp.ok else []
+    posts_list = [Post.model_validate(p).to_html_compatible() for p in raw_posts]
+
+    is_own_profile = (current_user.username == username)
+
+    return render_template('profile.html',
+                           profile_user=profile_user,
+                           posts=posts_list,
+                           is_own_profile=is_own_profile)
 
 
 @app.route('/edit_profile')

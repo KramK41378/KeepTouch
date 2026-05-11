@@ -13,7 +13,7 @@ from .backend_server import app
 def get_users_by_query(query: Select) -> list[User]:
     with create_session() as session:
         raw_users = session.execute(query).scalars()
-    users: list[User] = [User.from_custom_orm(user) for user in raw_users]
+        users: list[User] = [User.from_custom_orm(user) for user in raw_users]
     return users
 
 
@@ -26,13 +26,16 @@ def get_users():  # -> list[User]
     return jsonify(users)
 
 
-@app.route('/user/<string:username>', methods=['GET'])
+@app.route('/users/<string:username>', methods=['GET'])
 def get_user(username: str):  # -> User
     query = select(UserORM).where(UserORM.username == username)
 
-    user: User = get_users_by_query(query)[0]
+    result: list[User] = get_users_by_query(query)
+    print(result)
+    if not result:
+        return jsonify({'error': 'no such user'}), 404
 
-    return jsonify(user)
+    return jsonify(result[0])
 
 
 @app.route('/check_user_password', methods=['POST'])

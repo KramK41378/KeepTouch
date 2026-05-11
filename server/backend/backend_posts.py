@@ -33,9 +33,9 @@ def get_post_by_id(post_id: int):
     return jsonify(post)
 
 
-@app.route('/posts/<string:author>', methods=['GET'])
+@app.route('/posts/by/<string:author>', methods=['GET'])
 def get_posts_by_author(author: str):
-    query = select(PostORM).where(PostORM.author == author).order_by(PostORM.created_at)
+    query = select(PostORM).where(PostORM.author == author).order_by(PostORM.created_at.desc())
 
     posts: list[Post] = get_posts_by_query(query)
 
