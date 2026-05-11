@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from threading import Thread
 
 import requests
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, login_required, current_user
 from flask import Flask, jsonify, render_template, redirect
 from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
@@ -52,6 +52,8 @@ def start_frontend_server() -> Thread:
 
 @app.route('/')
 def start_menu():
+    if current_user.is_authenticated:
+        return redirect('/posts')
     try:
         joke_text = get_joke()
     except Exception:
