@@ -10,10 +10,14 @@ from models import UserORM, User
 from .backend_server import app
 
 
+from sqlalchemy.orm import joinedload
+
 def get_users_by_query(query: Select) -> list[User]:
     with create_session() as session:
-        raw_users = session.execute(query).scalars().all()
-        users: list[User] = [User.from_custom_orm(user) for user in raw_users]
+        raw_users = session.execute(
+            query.options(joinedload(UserORM.posts))
+        ).scalars().all()
+        users = [User.from_custom_orm(user) for user in raw_users]
     return users
 
 
