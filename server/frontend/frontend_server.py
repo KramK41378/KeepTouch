@@ -110,8 +110,10 @@ def policy():
 
 @app.route('/posts')
 def posts():
-    response: list[Post] = requests.get(f'{BACKEND_IP}/posts').json()
-    posts_list = [Post.model_validate(p) for p in response]
+    response = requests.get(f'{BACKEND_IP}/posts')
+    print(f'{BACKEND_IP}/posts')
+    print(response.status_code)
+    posts_list = [Post.model_validate(p) for p in response.json()]
     return render_template('main_posts.html',
                            posts=[post.to_html_compatible() for post in posts_list])
 
