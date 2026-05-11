@@ -1,7 +1,8 @@
 from hashlib import sha512
-from sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from threading import Thread
 
+import requests
 from flask_login import LoginManager, login_user
 from flask import Flask, jsonify, render_template, redirect
 from sqlalchemy import select, or_
@@ -21,6 +22,8 @@ app.config['SECRET_KEY'] = 'yalms'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+BACKEND_IP = 'http://localhost:8080'
 
 
 @login_manager.user_loader
@@ -107,13 +110,7 @@ def policy():
 
 @app.route('/posts')
 def posts():
-    posts = [
-        {
-            'image_path': 'static/images/icon.png',
-            'caption': 'Мой первый пост в KeepTouch!',
-            'author': 'alex_dev'
-        }
-    ]
+    posts_list = requests.get(f'{BACKEND_IP}/posts').json()
     return render_template('main_posts.html', posts=posts)
 
 
