@@ -12,7 +12,7 @@ from werkzeug.exceptions import BadRequest
 from databases import create_session
 from forms.login_form import LoginForm
 from forms.register_form import RegisterForm
-from models import UserORM
+from models import UserORM, Post
 from joke.joke_api import get_joke
 from flask import request
 
@@ -110,8 +110,9 @@ def policy():
 
 @app.route('/posts')
 def posts():
-    posts_list = requests.get(f'{BACKEND_IP}/posts').json()
-    return render_template('main_posts.html', posts=posts)
+    posts_list: list[Post] = requests.get(f'{BACKEND_IP}/posts').json()
+    return render_template('main_posts.html',
+                           posts=[post.to_html_compatible() for post in posts_list])
 
 
 @app.route('/main')

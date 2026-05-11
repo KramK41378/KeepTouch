@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from pydantic import BaseModel
-from sqlalchemy import String, JSON, DateTime, ForeignKey
+from pydantic import BaseModel, Field
+from sqlalchemy import String, JSON, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from databases import SqlAlchemyBase
@@ -10,16 +10,16 @@ from .user import User, UserORM
 
 class Post(BaseModel):
     text: str
-    images: list[str]
+    image: str
     author: User
-    timestamp: datetime
+    created_at: datetime = Field(default=None)
 
     @classmethod
     def from_custom_orm(cls, post_orm: 'PostORM', author: User = None) -> 'Post':
         return Post(
             text=post_orm.text,
-            images=post_orm.images,
-            timestamp=post_orm.timestamp,
+            image=post_orm.image,
+            created_at=post_orm.created_at,
             author=author or User.from_custom_orm(post_orm.author),
         )
 
@@ -29,14 +29,22 @@ class Post(BaseModel):
             html_test += f'''<img src="{image}" alt="KeepTouch™">'''
         return html_test
 
+    def to_html_compatible(self) -> dict[str, str]:
+        return {
+            'image_path': self.image,
+            'caption': self.text,
+            'author': self.author.username
+        }
+
+
 
 class PostORM(SqlAlchemyBase):
     __tablename__ = 'posts'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str] = mapped_column(String)
-    images: Mapped[dict] = mapped_column(JSON)
-    timestamp: Mapped[datetime] = mapped_column(DateTime)
+    image: Mapped[str] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
 
     author_username: Mapped[str] = mapped_column(
         String, ForeignKey('users.username')
@@ -48,5 +56,5 @@ class PostORM(SqlAlchemyBase):
     def from_pydantic_model(cls, model: Post) -> 'PostORM':
         return cls(
             text=model.text,
-            images=model.images,
+            images=model.image,
         )
