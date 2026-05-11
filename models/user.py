@@ -53,7 +53,7 @@ class UserORM(SqlAlchemyBase, UserMixin):
 
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
 
-    posts: Mapped[list[PostORM]] = relationship(back_populates='users')  # строка — ОК
+    posts: Mapped[list[PostORM]] = relationship(back_populates='author')
 
     @classmethod
     def from_pydantic_model(cls, model: User) -> UserORM:

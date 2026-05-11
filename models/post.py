@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pydantic import BaseModel
-from sqlalchemy import String, JSON, DateTime
+from sqlalchemy import String, JSON, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from databases import SqlAlchemyBase
@@ -37,6 +37,10 @@ class PostORM(SqlAlchemyBase):
     text: Mapped[str] = mapped_column(String)
     images: Mapped[dict] = mapped_column(JSON)
     timestamp: Mapped[datetime] = mapped_column(DateTime)
+
+    author_username: Mapped[str] = mapped_column(
+        String, ForeignKey('users.username')
+    )
 
     author: Mapped[UserORM] = relationship(back_populates='posts')
 
