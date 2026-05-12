@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from threading import Thread
 
 import requests
-from flask_login import LoginManager, login_user, login_required, current_user
+from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from flask import Flask, jsonify, render_template, redirect
 from sqlalchemy import select, or_, update
 from sqlalchemy.orm import Session
@@ -205,3 +205,9 @@ def create_post():
                                    error='Ошибка при публикации поста')
 
     return render_template('create_post.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
