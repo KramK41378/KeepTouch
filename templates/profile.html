@@ -24,7 +24,8 @@
                     <span class="avatar-placeholder">👤</span>
                 {% endif %}
             </div>
-            <h1 class="username">@{{ profile_user.username }}</h1>
+            <h1 class="username">{{ profile_user.name }}</h1>
+            <h4 class="username">{{ profile_user.username }}</h4>
             <p class="bio">{{ profile_user.description }}</p>
 
             <div class="stats">
