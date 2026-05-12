@@ -139,7 +139,8 @@ def user_profile(username: str):
     return render_template('profile.html',
                            profile_user=profile_user,
                            user_posts=posts_list,
-                           is_own_profile=is_own_profile)
+                           is_own_profile=is_own_profile,
+                           posts_count=len(posts_list))
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
