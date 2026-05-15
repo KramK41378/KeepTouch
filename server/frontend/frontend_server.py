@@ -115,11 +115,14 @@ def policy():
 @app.route('/posts')
 @login_required
 def posts():
-    response = requests.get(f'{BACKEND_IP}/posts').json()
-    # print(response)
-    posts_list = [Post.model_validate(p) for p in response]
-    return render_template('posts.html',
-                           posts=[post.to_html_compatible() for post in posts_list])
+    try:
+        response = requests.get(f'{BACKEND_IP}/posts').json()
+        # print(response)
+        posts_list = [Post.model_validate(p) for p in response]
+        return render_template('posts.html',
+                               posts=[post.to_html_compatible() for post in posts_list])
+    except Exception:
+        return render_template('posts.html', posts=[])
 
 
 @app.route('/users/<string:username>')
