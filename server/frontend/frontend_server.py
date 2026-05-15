@@ -54,8 +54,6 @@ def start_frontend_server() -> Thread:
 
 @app.route('/')
 def start_menu():
-    if current_user.is_authenticated:
-        return redirect('/posts')
     try:
         joke_text = get_joke()
     except Exception:
@@ -65,6 +63,8 @@ def start_menu():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect('/posts')
     form = LoginForm()
     if form.validate_on_submit():
         database_sess: Session = create_session()
