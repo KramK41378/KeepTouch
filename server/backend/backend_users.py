@@ -9,27 +9,43 @@ from databases import create_session
 from models import UserORM, User
 from .backend_server import app
 
-
 from sqlalchemy.orm import joinedload
 
+
 def get_users_by_query(query: Select) -> list[User]:
+    """Получает пользователей по запросу Select"""
+
+    # создаем сессию базы данных
     with create_session() as session:
+        # выполняем запрос
         raw_users = session.execute(query).scalars().all()
+
+        # преобразовываем в pydantic-модели
         users = [User.from_custom_orm(user) for user in raw_users]
+
+    # возвращаем список постов
     return users
 
 
 @app.route('/user', methods=['GET'])
 def get_users():  # -> list[User]
+    """Получить всех пользователей"""
+
+    # создаём запрос
     query = select(UserORM).order_by(UserORM.username)
 
+    # выполняем запрос
     users: list[User] = get_users_by_query(query)
 
+    # преобразовываем в json и возвращаем
     return jsonify(users)
 
 
 @app.route('/users/<string:username>', methods=['GET'])
 def get_user(username: str):  # -> User
+    """
+    Получить пользователей по username
+    """
     query = select(UserORM).where(UserORM.username == username)
 
     result: list[User] = get_users_by_query(query)
@@ -43,9 +59,13 @@ def get_user(username: str):  # -> User
 @app.route('/check_user_password', methods=['POST'])
 def check_user_password():
     username: str = request.json.get('username')
+
     password: str = request.json.get('password')
+
     hashed_password: str = sha512(password.encode('utf-8'), usedforsecurity=True).hexdigest()
+
     user: User = User.model_validate(get_user(username).json)
+
     return hashed_password == user.hashed_password
 
 
@@ -55,6 +75,7 @@ def add_user():
 
     try:
         user_model = User.model_validate(raw_user_model)
+
     except ValidationError as e:
         return jsonify({'error': 'validation', 'message': e.errors()}), 400
 
@@ -64,19 +85,27 @@ def add_user():
         user_orm: UserORM = UserORM.from_pydantic_model(user_model)
 
         session.add(user_orm)
+
         session.commit()
 
         resp = jsonify(User.from_custom_orm(user_orm).model_dump())
+
         resp.status_code = 201
+
         resp.headers['Location'] = f'/user/{user_orm.username}'
+
         return resp
 
     except IntegrityError:
+
         session.rollback()
+
         return jsonify({'error': 'duplicate', 'message': 'User with this identifier already exists'}), 409
 
     except Exception:
+
         session.rollback()
+
         return jsonify({'error': 'INTERNAL', 'detail': 'Server processing error'}), 500
 
     finally:
