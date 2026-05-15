@@ -31,14 +31,6 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.remember_me.label }}
-                {{ form.remember_me(class="form-input") }}
-                {% if form.remember_me.errors %}
-                    <span class="field-error">{{ form.remember_me.errors[0] }}</span>
-                {% endif %}
-            </div>
-
             {% if login_error %}
                 <div class="login-error">{{ login_error }}</div>
             {% endif %}
