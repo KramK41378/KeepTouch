@@ -22,7 +22,8 @@
                     <div class="post-card">
                         <img src="{{ url_for('static', filename=post.image_path) }}" alt="Фото поста" class="post-image" loading="lazy">
                         <div class="post-caption">
-                            <div class="post-author">{{ post.author }}</div>
+                            <a href="/users/{{ post.author }}" class="nav-button">{{ post.author }}</a>
+<!--                            <div class="post-author">{{ post.author }}</div>-->
                             <p class="post-text">{{ post.caption }}</p>
                         </div>
                     </div>
