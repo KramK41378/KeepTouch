@@ -25,7 +25,3 @@ def global_init(db_file):
 def create_session() -> Session:
     global __factory
     return __factory()
-
-if __name__ == '__main__':
-    global_init(':memory:')
-    session = create_session()
